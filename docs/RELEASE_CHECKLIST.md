@@ -12,7 +12,7 @@
 1. Copy updated `docker-compose.yml`, `umbrel-app.yml`, `assets/`, `hooks/` from the packaging repo into the matching **`harmalh-*` folder** (folder name = app id).
 2. Ensure `app_proxy` `APP_HOST` matches `{folder}_{service}_1` (e.g. `harmalh-paperclip_web_1`).
 3. Update icon/gallery URLs if they should point at this store repo’s `main` branch.
-4. Run CI locally if needed: YAML parse + `docker compose config` for stub apps.
+4. Run store **CI** on GitHub (YAML parse of compose/manifests); full `docker compose config` is not used because of Umbrel `app_proxy` merge.
 5. Commit with a clear message (e.g. `store: sync harmalh-paperclip from umbrel-paperclip@<sha>`).
 6. Push `main`; confirm store **CI** passes.
 
