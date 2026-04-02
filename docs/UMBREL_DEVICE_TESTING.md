@@ -14,9 +14,9 @@ The [community store template](https://github.com/getumbrel/umbrel-community-app
 2. Open **Community app stores** (wording may vary slightly by version) and choose **Add**.
 3. Paste: `https://github.com/harmalh/umbrel-community-store`
 4. Confirm the store appears (this repo’s store name: **Harm Alhusen Lab**).
-5. Open the store listing and **verify all three apps** show up with sensible **names, icons, and descriptions**:
+5. Open the store listing and **verify all apps** show up with sensible **names, icons, and descriptions**:
    - `harmalh-paperclip` — Paperclip
-   - `harmalh-hermes-agent` — Hermes Agent (stub)
+   - `harmalh-hermes-agent` — Hermes Agent (gateway + status page; requires GHCR image — see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent))
    - `harmalh-opencode` — OpenCode (stub)
 
 If something is wrong in the listing, fix `umbrel-app.yml` (and assets URLs) in this repo, push, and refresh the store on Umbrel.
@@ -25,7 +25,7 @@ If something is wrong in the listing, fix `umbrel-app.yml` (and assets URLs) in 
 
 ## 2. Install Paperclip first
 
-Paperclip is the first **real** app (full web UI). Hermes and OpenCode can stay **minimal nginx stubs** until you replace them.
+Paperclip is the primary **full web UI** app. **Hermes Agent** is a real stack (nginx status page + `hermes gateway run`) but the container image must exist on GHCR (`ghcr.io/harmalh/hermes-agent-umbrel`) — run the packaging workflow in [harmalh/umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) before expecting install to succeed. OpenCode remains a minimal nginx stub until replaced.
 
 **Goal for this step is “good enough,” not perfection:**
 
@@ -63,18 +63,21 @@ For eventual **official** submissions, Umbrel expects you to describe the **envi
 
 ---
 
-## 5. Hermes Agent and OpenCode — keep minimal for now
+## 5. Hermes Agent (gateway) and OpenCode (stub)
 
-The nginx stub apps are **intentional**: Umbrel allows **server-style** apps that expose a **simple page** with setup or connection details instead of a full product UI.
+**Hermes Agent**
 
-**Enough for this phase:**
-
+- [ ] GHCR image built and tagged (e.g. `0.2.0`) per [umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) README; digest pinned in store `docker-compose.yml` when you cut a stable release
 - [ ] Native **install** works from the store
-- [ ] App **opens** from Umbrel
-- [ ] **Landing page** explains what this is and points to the packaging repo / next steps
-- [ ] **Volumes** and hooks behave (e.g. `APP_DATA_DIR` for stub HTML)
+- [ ] App **opens** from Umbrel (status/setup page)
+- [ ] **`hermes` container** stays up (`docker logs harmalh-hermes-agent_hermes_1`); configure gateway via `docker exec` or `.env` under `APP_DATA_DIR/data`
+- [ ] **Restart** preserves data under `data/`; **uninstall** clears app data as usual
 
-Defer deep Hermes/OpenCode feature packaging until Paperclip and persistence testing feel solid.
+**OpenCode** (still a minimal nginx stub)
+
+- [ ] Install opens a **landing page** with packaging pointers
+
+Defer full OpenCode product packaging until you swap in a real image.
 
 ---
 

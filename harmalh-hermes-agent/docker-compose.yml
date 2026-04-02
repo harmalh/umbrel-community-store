@@ -12,3 +12,15 @@ services:
     init: true
     volumes:
       - ${APP_DATA_DIR}/www:/usr/share/nginx/html:ro
+
+  # After GHCR push: pin multi-arch index digest from workflow log, e.g.
+  # image: ghcr.io/harmalh/hermes-agent-umbrel:0.2.0@sha256:...
+  hermes:
+    image: ghcr.io/harmalh/hermes-agent-umbrel:0.2.0
+    restart: on-failure
+    init: true
+    stop_grace_period: 1m
+    shm_size: "1gb"
+    command: ["gateway", "run"]
+    volumes:
+      - ${APP_DATA_DIR}/data:/opt/data
