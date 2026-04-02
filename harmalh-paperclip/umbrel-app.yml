@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.2"
+version: "2026.325.3"
 port: 3100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -29,15 +29,17 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Fix pre-start hook so embedded PostgreSQL keeps valid data-directory modes.
+  Auto-run CEO bootstrap after install/update; seed on-disk config for the CLI.
 
 
-  - Remove recursive `chmod … g+rwX` on APP_DATA_DIR (Postgres requires 0700 or
-    0750 under …/instances/*/db; the old hook broke the DB on every app start).
-  - Still `chown` to 1000:1000 and normalize existing `…/instances/*/db` to 700.
+  - pre-start: if missing, write minimal config.json (host needs `jq`) so the
+    bootstrap CLI can run (paperclip#87).
+  - post-install / post-update: wait for /api/health then run
+    `pnpm paperclipai auth bootstrap-ceo` in the container; tee output to
+    APP_DATA_DIR/bootstrap-ceo-automation.log.
 
 
-  Earlier: hostname allowlist via PAPERCLIP_PUBLIC_URL / PAPERCLIP_ALLOWED_HOSTNAMES.
+  Earlier: embedded Postgres directory modes; hostname allowlist.
 dependencies: []
 path: ""
 defaultUsername: ""

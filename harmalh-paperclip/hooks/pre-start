@@ -9,3 +9,69 @@ chown -R 1000:1000 "${APP_DATA_DIR}/data" || true
 chmod u+rwx "${APP_DATA_DIR}/data" || true
 find "${APP_DATA_DIR}/data" -type d -path '*/instances/*/db' -exec chmod 700 {} \; \
     2>/dev/null || true
+
+# The Paperclip CLI (`paperclipai auth bootstrap-ceo`) requires an on-disk
+# config.json even when the server runs from env (see paperclipai/paperclip#87).
+# Seed a minimal Umbrel-aligned config before the first container start so
+# post-install / post-update hooks can run bootstrap non-interactively.
+CONFIG_DIR="${APP_DATA_DIR}/data/instances/default"
+CONFIG_FILE="${CONFIG_DIR}/config.json"
+if [[ ! -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
+    mkdir -p "${CONFIG_DIR}"
+    UPDATED="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+    DD="${DEVICE_DOMAIN_NAME:-umbrel.local}"
+    DH="${DEVICE_HOSTNAME:-umbrel}"
+    PUB="http://${DD}:3100"
+    jq -n \
+        --arg updated "$UPDATED" \
+        --arg pub "$PUB" \
+        --arg dh "$DH" \
+        --arg dd "$DD" \
+        '{
+      "$meta": {"version": 1, "updatedAt": $updated, "source": "onboard"},
+      "database": {
+        "mode": "embedded-postgres",
+        "embeddedPostgresDataDir": "/paperclip/instances/default/db",
+        "embeddedPostgresPort": 54329,
+        "backup": {
+          "enabled": true,
+          "intervalMinutes": 60,
+          "retentionDays": 30,
+          "dir": "/paperclip/instances/default/data/backups"
+        }
+      },
+      "logging": {"mode": "file", "logDir": "/paperclip/instances/default/logs"},
+      "server": {
+        "deploymentMode": "authenticated",
+        "exposure": "private",
+        "host": "0.0.0.0",
+        "port": 3100,
+        "allowedHostnames": ([$dd, $dh, "localhost", "127.0.0.1"] | map(ascii_downcase) | unique),
+        "serveUi": true
+      },
+      "auth": {
+        "baseUrlMode": "explicit",
+        "publicBaseUrl": $pub,
+        "disableSignUp": false
+      },
+      "storage": {
+        "provider": "local_disk",
+        "localDisk": {"baseDir": "/paperclip/instances/default/data/storage"},
+        "s3": {
+          "bucket": "paperclip",
+          "region": "us-east-1",
+          "prefix": "",
+          "forcePathStyle": false
+        }
+      },
+      "secrets": {
+        "provider": "local_encrypted",
+        "strictMode": false,
+        "localEncrypted": {
+          "keyFilePath": "/paperclip/instances/default/secrets/master.key"
+        }
+      }
+    }' >"${CONFIG_FILE}.tmp"
+    mv "${CONFIG_FILE}.tmp" "${CONFIG_FILE}"
+    chown 1000:1000 "${CONFIG_FILE}" 2>/dev/null || true
+fi

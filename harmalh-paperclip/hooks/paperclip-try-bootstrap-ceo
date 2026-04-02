@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Run after the web container is up (post-install / post-update). Creates the
+# first CEO bootstrap invite non-interactively. Idempotent if an admin exists.
+set -euo pipefail
+
+WEB_CONTAINER="${APP_ID}_web_1"
+LOG_FILE="${APP_DATA_DIR}/bootstrap-ceo-automation.log"
+
+log() {
+    echo "[paperclip-bootstrap] $*" | tee -a "${LOG_FILE}" >&2
+}
+
+if ! command -v docker >/dev/null 2>&1; then
+    log "docker not found; skipping"
+    exit 0
+fi
+
+: >"${LOG_FILE}" || true
+
+for _ in $(seq 1 120); do
+    if docker inspect "${WEB_CONTAINER}" >/dev/null 2>&1; then
+        state="$(docker inspect -f '{{.State.Running}}' "${WEB_CONTAINER}" 2>/dev/null || echo false)"
+        if [[ "${state}" == "true" ]]; then
+            break
+        fi
+    fi
+    sleep 1
+done
+
+if [[ "$(docker inspect -f '{{.State.Running}}' "${WEB_CONTAINER}" 2>/dev/null || echo false)" != "true" ]]; then
+    log "web container ${WEB_CONTAINER} not running; skipping"
+    exit 0
+fi
+
+for _ in $(seq 1 90); do
+    if docker exec -u node -w /app "${WEB_CONTAINER}" node -e \
+        "require('http').get('http://127.0.0.1:3100/api/health',(r)=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1));" \
+        >/dev/null 2>&1; then
+        break
+    fi
+    sleep 2
+done
+
+log "running: pnpm paperclipai auth bootstrap-ceo (inside ${WEB_CONTAINER})"
+set +e
+out="$(docker exec -u node -w /app -e CI=1 -e HOME=/paperclip "${WEB_CONTAINER}" \
+    pnpm paperclipai auth bootstrap-ceo 2>&1)"
+rc=$?
+set -e
+printf '%s\n' "${out}" | tee -a "${LOG_FILE}" >&2
+if [[ "${rc}" -ne 0 ]]; then
+    log "bootstrap-ceo exited ${rc} (may be OK if admin already exists)"
+fi
+exit 0
