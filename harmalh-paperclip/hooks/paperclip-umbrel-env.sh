@@ -15,3 +15,15 @@ paperclip_published_host_port() {
     fi
     echo "23100"
 }
+
+# Primary IPv4 for Host header when users open http://<LAN-IP>:port (Paperclip private mode).
+paperclip_lan_ipv4() {
+    local lan
+    if command -v ip >/dev/null 2>&1; then
+        lan="$(ip -4 route get 1.1.1.1 2>/dev/null | awk '{for(i=1;i<NF;i++)if($i=="src"){print $(i+1);exit}}')"
+    fi
+    if [[ -z "${lan}" ]]; then
+        lan="$(hostname -I 2>/dev/null | awk '{ print $1 }')"
+    fi
+    echo "${lan}"
+}

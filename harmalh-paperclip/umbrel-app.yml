@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.6"
+version: "2026.325.7"
 port: 23100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -39,17 +39,14 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Published port 23100 + exports.sh (avoid 3100 clash with core-lightning-rtl).
+  Fix HTTP 403 when using http://<LAN-IP>:23100 (Paperclip hostname allowlist).
 
 
-  - PAPERCLIP_PUBLIC_URL uses APP_PAPERCLIP_PUBLISHED_PORT from exports.sh.
-  - pre-start syncs config.json publicBaseUrl to the published port.
+  - APP_PAPERCLIP_LAN_IP from exports.sh appended to PAPERCLIP_ALLOWED_HOSTNAMES.
+  - pre-start merges LAN IP into config.json server.allowedHostnames.
 
 
-  If you had PAPERCLIP_FIRST_ADMIN_INVITE.txt with :3100, delete it and restart once.
-
-
-  Earlier: invite file; Postgres perms; bootstrap hooks.
+  Earlier: port 23100; invite file; Postgres perms; bootstrap hooks.
 dependencies: []
 path: ""
 defaultUsername: ""
