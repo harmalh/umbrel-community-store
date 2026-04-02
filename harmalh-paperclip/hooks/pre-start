@@ -4,6 +4,8 @@ set -Eeuo pipefail
 # shellcheck source=/dev/null
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/paperclip-umbrel-env.sh"
 _HOST_PORT="$(paperclip_published_host_port)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PKG_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 mkdir -p "${APP_DATA_DIR}/data"
 chown -R 1000:1000 "${APP_DATA_DIR}/data" || true
@@ -35,6 +37,7 @@ CONFIG_DIR="${APP_DATA_DIR}/data/instances/default"
 CONFIG_FILE="${CONFIG_DIR}/config.json"
 if [[ ! -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
     mkdir -p "${CONFIG_DIR}"
+    chown -R 1000:1000 "${APP_DATA_DIR}/data/instances" || true
     UPDATED="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
     DD="${DEVICE_DOMAIN_NAME:-umbrel.local}"
     DH="${DEVICE_HOSTNAME:-umbrel}"
@@ -100,3 +103,22 @@ if [[ -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
         && mv "${CONFIG_FILE}.ptmp" "${CONFIG_FILE}"
     chown 1000:1000 "${CONFIG_FILE}" 2>/dev/null || true
 fi
+
+# Paperclip creates these paths at runtime as uid 1000. Ensure they already exist and
+# are writable so a fresh install does not fail with EACCES on /paperclip/instances/default/logs.
+mkdir -p \
+    "${APP_DATA_DIR}/data/instances/default/logs" \
+    "${APP_DATA_DIR}/data/instances/default/data/storage" \
+    "${APP_DATA_DIR}/data/instances/default/data/backups" \
+    "${APP_DATA_DIR}/data/instances/default/secrets"
+chown -R 1000:1000 "${APP_DATA_DIR}/data/instances/default" || true
+chmod 750 "${APP_DATA_DIR}/data/instances/default" || true
+
+# Relative package bind mounts are unreliable here. Stage bootstrap assets into APP_DATA_DIR
+# before compose up so the bootstrap sidecar always sees /bootstrap/server.mjs and index.html.
+BOOTSTRAP_SRC="${PKG_ROOT}/bootstrap"
+BOOTSTRAP_DST="${APP_DATA_DIR}/bootstrap"
+mkdir -p "${BOOTSTRAP_DST}"
+cp "${BOOTSTRAP_SRC}/index.html" "${BOOTSTRAP_DST}/index.html"
+cp "${BOOTSTRAP_SRC}/server.mjs" "${BOOTSTRAP_DST}/server.mjs"
+chown -R 1000:1000 "${BOOTSTRAP_DST}" || true

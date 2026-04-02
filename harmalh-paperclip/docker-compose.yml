@@ -13,7 +13,7 @@ services:
     depends_on: [web]
     entrypoint: ["node", "/bootstrap/server.mjs"]
     volumes:
-      - ./bootstrap:/bootstrap:ro
+      - ${APP_DATA_DIR}/bootstrap:/bootstrap:ro
       - ${APP_DATA_DIR}:/app-data:ro
 
   web:

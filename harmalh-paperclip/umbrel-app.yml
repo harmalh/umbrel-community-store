@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.10"
+version: "2026.325.11"
 port: 23100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -37,15 +37,16 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Replace the bootstrap gateway with a tiny Node proxy inside the Paperclip image.
+  Fix fresh-install permissions and bootstrap asset staging.
 
 
-  - No extra nginx image pull during update/install.
-  - Avoids bootstrap container startup/DNS issues that left app_proxy waiting for
-    `harmalh-paperclip_bootstrap_1`.
+  - pre-start now creates/chowns Paperclip runtime dirs (logs, storage, backups, secrets)
+    so the app can start as uid 1000 without EACCES.
+  - bootstrap assets are copied into APP_DATA_DIR/bootstrap before compose up, then
+    mounted from there instead of relying on a relative package bind mount.
 
 
-  Earlier: bootstrap landing route; port 23100; invite file; Postgres perms.
+  Earlier: Node bootstrap proxy; bootstrap landing route; port 23100.
 dependencies: []
 path: "/bootstrap-entry/"
 defaultUsername: ""
