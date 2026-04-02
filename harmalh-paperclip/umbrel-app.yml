@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.8"
+version: "2026.325.9"
 port: 23100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -37,16 +37,16 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Umbrel now opens a bootstrap landing route first and redirects to the saved CEO
-  invite while Paperclip is waiting for its first instance admin.
+  Fix bootstrap gateway startup on Umbrel updates.
 
 
-  - Add an Umbrel-owned nginx gateway at /bootstrap-entry/ and point the app tile there.
-  - Keep auto-running bootstrap-ceo and persisting PAPERCLIP_FIRST_ADMIN_INVITE.txt.
-  - Remove the earlier LAN-IP hostname workaround from packaging.
+  - nginx now resolves the Paperclip upstream at request time via Docker DNS
+    instead of failing at container startup.
+  - This prevents app_proxy from hanging at 99% while waiting for
+    `harmalh-paperclip_bootstrap_1`.
 
 
-  Earlier: port 23100; invite file; Postgres perms; bootstrap hooks.
+  Earlier: bootstrap landing route; port 23100; invite file; Postgres perms.
 dependencies: []
 path: "/bootstrap-entry/"
 defaultUsername: ""
