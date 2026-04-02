@@ -32,14 +32,22 @@ if [[ "$(docker inspect -f '{{.State.Running}}' "${WEB_CONTAINER}" 2>/dev/null |
     exit 0
 fi
 
+READY=0
 for _ in $(seq 1 90); do
     if docker exec -u node -w /app "${WEB_CONTAINER}" node -e \
         "require('http').get('http://127.0.0.1:3100/api/health',(r)=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1));" \
         >/dev/null 2>&1; then
+        READY=1
         break
     fi
     sleep 2
 done
+if [[ "${READY}" -ne 1 ]]; then
+    log "API /api/health never returned HTTP 200 (~3 min); skipping bootstrap-ceo."
+    log "Paperclip is probably not running (often: embedded Postgres needs chmod 700 on"
+    log "APP_DATA_DIR/data/instances/default/db). Check app logs and fix perms, then restart."
+    exit 0
+fi
 
 log "running: pnpm paperclipai auth bootstrap-ceo (inside ${WEB_CONTAINER})"
 set +e

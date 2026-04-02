@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.3"
+version: "2026.325.4"
 port: 3100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -29,17 +29,15 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Auto-run CEO bootstrap after install/update; seed on-disk config for the CLI.
+  Harden embedded-Postgres permissions; only bootstrap when API is healthy.
 
 
-  - pre-start: if missing, write minimal config.json (host needs `jq`) so the
-    bootstrap CLI can run (paperclip#87).
-  - post-install / post-update: wait for /api/health then run
-    `pnpm paperclipai auth bootstrap-ceo` in the container; tee output to
-    APP_DATA_DIR/bootstrap-ceo-automation.log.
+  - pre-start: explicit chmod 700 on …/instances/default/db and 750 on instance dirs.
+  - bootstrap hook: skip CEO invite if /api/health never succeeds; log the reason.
+  - post-start: same bootstrap helper (covers restarts after fixing DB perms).
 
 
-  Earlier: embedded Postgres directory modes; hostname allowlist.
+  Earlier: auto bootstrap-ceo; config.json seed (jq); hostname allowlist.
 dependencies: []
 path: ""
 defaultUsername: ""

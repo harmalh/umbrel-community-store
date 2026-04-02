@@ -9,6 +9,19 @@ chown -R 1000:1000 "${APP_DATA_DIR}/data" || true
 chmod u+rwx "${APP_DATA_DIR}/data" || true
 find "${APP_DATA_DIR}/data" -type d -path '*/instances/*/db' -exec chmod 700 {} \; \
     2>/dev/null || true
+# Explicit path: guarantees fix even if find -path behaves differently (busybox, odd layouts).
+DB_DIR="${APP_DATA_DIR}/data/instances/default/db"
+if [[ -d "${DB_DIR}" ]]; then
+    chmod 700 "${DB_DIR}" || true
+fi
+# Tighten instance dirs so Postgres does not reject the cluster (avoid world-writable parents).
+INST_ROOT="${APP_DATA_DIR}/data/instances"
+if [[ -d "${INST_ROOT}" ]]; then
+    chmod 750 "${INST_ROOT}" || true
+    if [[ -d "${INST_ROOT}/default" ]]; then
+        chmod 750 "${INST_ROOT}/default" || true
+    fi
+fi
 
 # The Paperclip CLI (`paperclipai auth bootstrap-ceo`) requires an on-disk
 # config.json even when the server runs from env (see paperclipai/paperclip#87).
