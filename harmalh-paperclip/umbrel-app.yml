@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.1"
+version: "2026.325.2"
 port: 3100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -29,12 +29,15 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Fix Umbrel hostname allowlist for authenticated/private mode.
+  Fix pre-start hook so embedded PostgreSQL keeps valid data-directory modes.
 
 
-  - Set PAPERCLIP_PUBLIC_URL and PAPERCLIP_ALLOWED_HOSTNAMES using Umbrel’s
-    DEVICE_DOMAIN_NAME / DEVICE_HOSTNAME so http://umbrel.local:3100 and the
-    dashboard “open app” flow work (avoids “hostname not allowed” and HTTP 403).
+  - Remove recursive `chmod … g+rwX` on APP_DATA_DIR (Postgres requires 0700 or
+    0750 under …/instances/*/db; the old hook broke the DB on every app start).
+  - Still `chown` to 1000:1000 and normalize existing `…/instances/*/db` to 700.
+
+
+  Earlier: hostname allowlist via PAPERCLIP_PUBLIC_URL / PAPERCLIP_ALLOWED_HOSTNAMES.
 dependencies: []
 path: ""
 defaultUsername: ""

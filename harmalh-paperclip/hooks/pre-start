@@ -3,4 +3,9 @@ set -Eeuo pipefail
 
 mkdir -p "${APP_DATA_DIR}/data"
 chown -R 1000:1000 "${APP_DATA_DIR}/data" || true
-chmod -R u+rwX,g+rwX "${APP_DATA_DIR}/data" || true
+# Embedded PostgreSQL (Paperclip) only accepts data directories with mode 0700 or
+# 0750 (u=rwx, g=rx, o=—). A recursive `chmod … g+rwX` breaks …/instances/*/db on
+# every start and matches the "invalid permissions" FATAL in Postgres logs.
+chmod u+rwx "${APP_DATA_DIR}/data" || true
+find "${APP_DATA_DIR}/data" -type d -path '*/instances/*/db' -exec chmod 700 {} \; \
+    2>/dev/null || true
