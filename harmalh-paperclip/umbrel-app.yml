@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.0"
+version: "2026.325.1"
 port: 3100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -29,13 +29,12 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Initial fresh-start Umbrel package.
+  Fix Umbrel hostname allowlist for authenticated/private mode.
 
 
-  - Single Paperclip container
-  - Embedded PostgreSQL mode
-  - APP_DATA_DIR persistence
-  - Authenticated/private deployment defaults
+  - Set PAPERCLIP_PUBLIC_URL and PAPERCLIP_ALLOWED_HOSTNAMES using Umbrel’s
+    DEVICE_DOMAIN_NAME / DEVICE_HOSTNAME so http://umbrel.local:3100 and the
+    dashboard “open app” flow work (avoids “hostname not allowed” and HTTP 403).
 dependencies: []
 path: ""
 defaultUsername: ""
