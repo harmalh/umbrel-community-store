@@ -4,8 +4,8 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.5"
-port: 3100
+version: "2026.325.6"
+port: 23100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
   Paperclip container.
@@ -23,6 +23,11 @@ description: >-
   All runtime state is persisted under APP_DATA_DIR via PAPERCLIP_HOME.
 
 
+  Web UI: open from the Umbrel home screen (published port 23100). If you see
+  ERR_CONNECTION_REFUSED, try http://<umbrel-lan-ip>:23100 (Windows mDNS can fail) or
+  check for a port conflict.
+
+
   Packaging source: https://github.com/harmalh/umbrel-paperclip
 developer: Paperclip AI
 website: https://github.com/paperclipai/paperclip
@@ -34,15 +39,17 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Persist first-admin invite URL (Paperclip UI cannot display it).
+  Published port 23100 + exports.sh (avoid 3100 clash with core-lightning-rtl).
 
 
-  - PAPERCLIP_FIRST_ADMIN_INVITE.txt under app data; --base-url for correct hostname.
-  - Skip bootstrap-ceo once file has an invite URL (no rotate every restart).
-  - Append bootstrap logs instead of truncating.
+  - PAPERCLIP_PUBLIC_URL uses APP_PAPERCLIP_PUBLISHED_PORT from exports.sh.
+  - pre-start syncs config.json publicBaseUrl to the published port.
 
 
-  Earlier: Postgres data-dir perms; health-gated bootstrap; post-start.
+  If you had PAPERCLIP_FIRST_ADMIN_INVITE.txt with :3100, delete it and restart once.
+
+
+  Earlier: invite file; Postgres perms; bootstrap hooks.
 dependencies: []
 path: ""
 defaultUsername: ""

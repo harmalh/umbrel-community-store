@@ -5,10 +5,14 @@
 # See paperclip ui/App.tsx BootstrapPendingPage + cli/auth-bootstrap-ceo.ts.
 set -euo pipefail
 
+# shellcheck source=/dev/null
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/paperclip-umbrel-env.sh"
+_BASE_PORT="$(paperclip_published_host_port)"
+
 WEB_CONTAINER="${APP_ID}_web_1"
 LOG_FILE="${APP_DATA_DIR}/bootstrap-ceo-automation.log"
 INVITE_FILE="${APP_DATA_DIR}/PAPERCLIP_FIRST_ADMIN_INVITE.txt"
-BASE_URL="http://${DEVICE_DOMAIN_NAME:-umbrel.local}:3100"
+BASE_URL="http://${DEVICE_DOMAIN_NAME:-umbrel.local}:${_BASE_PORT}"
 
 append_log() {
     printf '%s\n' "$@" | tee -a "${LOG_FILE}" >&2

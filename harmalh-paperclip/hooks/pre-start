@@ -1,6 +1,10 @@
 #!/bin/bash
 set -Eeuo pipefail
 
+# shellcheck source=/dev/null
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/paperclip-umbrel-env.sh"
+_HOST_PORT="$(paperclip_published_host_port)"
+
 mkdir -p "${APP_DATA_DIR}/data"
 chown -R 1000:1000 "${APP_DATA_DIR}/data" || true
 # Embedded PostgreSQL (Paperclip) only accepts data directories with mode 0700 or
@@ -34,7 +38,7 @@ if [[ ! -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
     UPDATED="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
     DD="${DEVICE_DOMAIN_NAME:-umbrel.local}"
     DH="${DEVICE_HOSTNAME:-umbrel}"
-    PUB="http://${DD}:3100"
+    PUB="http://${DD}:${_HOST_PORT}"
     jq -n \
         --arg updated "$UPDATED" \
         --arg pub "$PUB" \
@@ -86,5 +90,13 @@ if [[ ! -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
       }
     }' >"${CONFIG_FILE}.tmp"
     mv "${CONFIG_FILE}.tmp" "${CONFIG_FILE}"
+    chown 1000:1000 "${CONFIG_FILE}" 2>/dev/null || true
+fi
+# Align saved config with the Umbrel-published port (e.g. after changing umbrel-app.yml port).
+if [[ -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
+    _dd="${DEVICE_DOMAIN_NAME:-umbrel.local}"
+    _want_pub="http://${_dd}:${_HOST_PORT}"
+    jq --arg w "${_want_pub}" '.auth.publicBaseUrl = $w' "${CONFIG_FILE}" >"${CONFIG_FILE}.ptmp" \
+        && mv "${CONFIG_FILE}.ptmp" "${CONFIG_FILE}"
     chown 1000:1000 "${CONFIG_FILE}" 2>/dev/null || true
 fi

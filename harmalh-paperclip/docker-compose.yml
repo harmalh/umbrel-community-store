@@ -17,11 +17,10 @@ services:
       PORT: "3100"
       SERVE_UI: "true"
       PAPERCLIP_HOME: "/paperclip"
-      # Authenticated/private mode enforces a Host allowlist. Umbrel exposes the UI at
-      # http://${DEVICE_DOMAIN_NAME}:3100 (see getumbrel/umbrel-apps README). Without this,
-      # requests show "hostname not allowed" or HTTP 403 via the app proxy.
+      # Host allowlist + public URL for authenticated mode. Published port is umbrel-app.yml
+      # "port:" via exports.sh (23100 — avoids 3100 used by core-lightning-rtl in official store).
       # https://github.com/paperclipai/paperclip/blob/master/doc/DOCKER.md
-      PAPERCLIP_PUBLIC_URL: "http://${DEVICE_DOMAIN_NAME}:3100"
+      PAPERCLIP_PUBLIC_URL: "http://${DEVICE_DOMAIN_NAME}:${APP_PAPERCLIP_PUBLISHED_PORT:-23100}"
       PAPERCLIP_ALLOWED_HOSTNAMES: "${DEVICE_DOMAIN_NAME},${DEVICE_HOSTNAME},localhost,127.0.0.1"
       PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
       PAPERCLIP_DEPLOYMENT_EXPOSURE: "private"
