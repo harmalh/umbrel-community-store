@@ -1,0 +1,27 @@
+manifestVersion: 1.1
+id: harmalh-opencode
+name: OpenCode
+tagline: Minimal Umbrel stub — replace with real OpenCode service
+icon: https://svgur.com/i/mvA.svg
+category: developer
+version: "0.1.0"
+port: 80
+description: >-
+  Placeholder web page served by nginx. Use this to validate the community store
+  and Umbrel install path before swapping in a real OpenCode container.
+
+
+  Packaging source: https://github.com/harmalh/umbrel-opencode
+developer: Harm Alhusen
+website: https://github.com/harmalh/umbrel-opencode
+submitter: Harm Alhusen
+submission: https://github.com/harmalh/umbrel-community-store
+repo: https://github.com/harmalh/umbrel-opencode
+support: https://github.com/harmalh/umbrel-opencode/issues
+gallery: []
+releaseNotes: >-
+  Initial minimal nginx stub for native Umbrel testing.
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""

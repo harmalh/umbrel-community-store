@@ -1,0 +1,90 @@
+# Validates community store layout and YAML. Full Paperclip compose is skipped
+# because Umbrel merges app_proxy at runtime (same as umbrel-paperclip CI).
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate store and apps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install pyyaml==6.0.2
+
+      - name: Parse YAML (store, workflows, app manifests)
+        run: |
+          python << 'PY'
+          import sys
+          from pathlib import Path
+
+          import yaml
+
+          roots = [Path("umbrel-app-store.yml")]
+          roots += sorted(Path(".github/workflows").glob("*.yml"))
+          for p in sorted(Path(".").rglob("umbrel-app.yml")):
+              if ".git" not in p.parts:
+                  roots.append(p)
+
+          failed = False
+          for path in roots:
+              if not path.is_file():
+                  print(f"MISSING: {path}", file=sys.stderr)
+                  failed = True
+                  continue
+              try:
+                  with path.open(encoding="utf-8") as f:
+                      yaml.safe_load(f)
+                  print(f"OK: {path}")
+              except Exception as e:
+                  print(f"FAIL: {path}: {e}", file=sys.stderr)
+                  failed = True
+
+          sys.exit(1 if failed else 0)
+          PY
+
+      - name: Parse docker-compose YAML (syntax only)
+        run: |
+          python << 'PY'
+          import sys
+          from pathlib import Path
+
+          import yaml
+
+          failed = False
+          for path in sorted(Path(".").rglob("docker-compose.yml")):
+              if ".git" in path.parts:
+                  continue
+              try:
+                  with path.open(encoding="utf-8") as f:
+                      yaml.safe_load(f)
+                  print(f"OK (YAML): {path}")
+              except Exception as e:
+                  print(f"FAIL: {path}: {e}", file=sys.stderr)
+                  failed = True
+
+          sys.exit(1 if failed else 0)
+          PY
+
+      - name: Docker Compose config (nginx stubs only)
+        env:
+          APP_DATA_DIR: /tmp/umbrel-ci
+          APP_SEED: ci-placeholder-not-for-production
+        run: |
+          docker compose -f harmalh-hermes-agent/docker-compose.yml config
+          docker compose -f harmalh-opencode/docker-compose.yml config
+
+      - name: Paperclip compose note
+        run: |
+          echo "Skipping docker compose config for harmalh-paperclip: expects Umbrel app_proxy merge."

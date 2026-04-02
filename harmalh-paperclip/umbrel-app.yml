@@ -1,0 +1,42 @@
+manifestVersion: 1.1
+id: harmalh-paperclip
+name: Paperclip
+tagline: Autonomous AI workspace for coding and operations
+icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
+category: ai
+version: "2026.325.0"
+port: 3100
+description: >-
+  Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
+  Paperclip container.
+
+
+  This package intentionally uses a single-container topology:
+  no external database service and no DATABASE_URL.
+
+
+  All runtime state is persisted under APP_DATA_DIR via PAPERCLIP_HOME.
+
+
+  Packaging source: https://github.com/harmalh/umbrel-paperclip
+developer: Paperclip AI
+website: https://github.com/paperclipai/paperclip
+submitter: Harm Alhusen
+submission: https://github.com/harmalh/umbrel-community-store
+repo: https://github.com/paperclipai/paperclip
+support: https://github.com/paperclipai/paperclip/issues
+gallery:
+  - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
+  - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
+releaseNotes: >-
+  Initial fresh-start Umbrel package.
+
+
+  - Single Paperclip container
+  - Embedded PostgreSQL mode
+  - APP_DATA_DIR persistence
+  - Authenticated/private deployment defaults
+dependencies: []
+path: ""
+defaultUsername: ""
+defaultPassword: ""

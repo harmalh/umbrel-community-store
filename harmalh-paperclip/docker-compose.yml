@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  app_proxy:
+    environment:
+      APP_HOST: harmalh-paperclip_web_1
+      APP_PORT: 3100
+
+  web:
+    image: ghcr.io/harmalh/paperclip-umbrel:2026.325.0@sha256:1090a64d3c7b50301b4dd3b4b2b832252031fca145023b0cb11b4063c8dc2558
+    restart: on-failure
+    stop_grace_period: 1m
+    init: true
+    user: "1000:1000"
+    environment:
+      HOST: "0.0.0.0"
+      PORT: "3100"
+      SERVE_UI: "true"
+      PAPERCLIP_HOME: "/paperclip"
+      PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
+      PAPERCLIP_DEPLOYMENT_EXPOSURE: "private"
+      BETTER_AUTH_SECRET: "$APP_SEED"
+      PAPERCLIP_MIGRATION_AUTO_APPLY: "true"
+      PAPERCLIP_MIGRATION_PROMPT: "never"
+    volumes:
+      - ${APP_DATA_DIR}/data:/paperclip
