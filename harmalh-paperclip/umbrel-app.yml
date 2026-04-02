@@ -4,11 +4,16 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.4"
+version: "2026.325.5"
 port: 3100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
   Paperclip container.
+
+
+  First-time admin: Paperclip cannot show the CEO invite URL in the browser (only a
+  hash is stored). After install or restart, open PAPERCLIP_FIRST_ADMIN_INVITE.txt
+  in this app's Umbrel data directory for the link, or see bootstrap-ceo-automation.log.
 
 
   This package intentionally uses a single-container topology:
@@ -29,15 +34,15 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Harden embedded-Postgres permissions; only bootstrap when API is healthy.
+  Persist first-admin invite URL (Paperclip UI cannot display it).
 
 
-  - pre-start: explicit chmod 700 on …/instances/default/db and 750 on instance dirs.
-  - bootstrap hook: skip CEO invite if /api/health never succeeds; log the reason.
-  - post-start: same bootstrap helper (covers restarts after fixing DB perms).
+  - PAPERCLIP_FIRST_ADMIN_INVITE.txt under app data; --base-url for correct hostname.
+  - Skip bootstrap-ceo once file has an invite URL (no rotate every restart).
+  - Append bootstrap logs instead of truncating.
 
 
-  Earlier: auto bootstrap-ceo; config.json seed (jq); hostname allowlist.
+  Earlier: Postgres data-dir perms; health-gated bootstrap; post-start.
 dependencies: []
 path: ""
 defaultUsername: ""

@@ -1,13 +1,21 @@
 #!/usr/bin/env bash
-# Run after the web container is up (post-install / post-update). Creates the
-# first CEO bootstrap invite non-interactively. Idempotent if an admin exists.
+# After the web container is healthy, run `paperclipai auth bootstrap-ceo` once per
+# instance (until an invite URL is saved on disk). Paperclip's UI cannot show the
+# invite URL — only the CLI prints it; tokens are stored hashed in the DB.
+# See paperclip ui/App.tsx BootstrapPendingPage + cli/auth-bootstrap-ceo.ts.
 set -euo pipefail
 
 WEB_CONTAINER="${APP_ID}_web_1"
 LOG_FILE="${APP_DATA_DIR}/bootstrap-ceo-automation.log"
+INVITE_FILE="${APP_DATA_DIR}/PAPERCLIP_FIRST_ADMIN_INVITE.txt"
+BASE_URL="http://${DEVICE_DOMAIN_NAME:-umbrel.local}:3100"
+
+append_log() {
+    printf '%s\n' "$@" | tee -a "${LOG_FILE}" >&2
+}
 
 log() {
-    echo "[paperclip-bootstrap] $*" | tee -a "${LOG_FILE}" >&2
+    append_log "[paperclip-bootstrap] $*"
 }
 
 if ! command -v docker >/dev/null 2>&1; then
@@ -15,7 +23,16 @@ if ! command -v docker >/dev/null 2>&1; then
     exit 0
 fi
 
-: >"${LOG_FILE}" || true
+if [[ -f "${INVITE_FILE}" ]] \
+    && grep -qE 'https?://[^[:space:]]+/invite/[^[:space:]]+' "${INVITE_FILE}" 2>/dev/null; then
+    log "Invite URL already saved in PAPERCLIP_FIRST_ADMIN_INVITE.txt — skipping bootstrap-ceo (avoids rotating a valid invite on every restart)."
+    exit 0
+fi
+
+{
+    echo ""
+    echo "=== paperclip-bootstrap $(date -u +"%Y-%m-%dT%H:%M:%SZ") ==="
+} >>"${LOG_FILE}" 2>/dev/null || true
 
 for _ in $(seq 1 120); do
     if docker inspect "${WEB_CONTAINER}" >/dev/null 2>&1; then
@@ -49,14 +66,43 @@ if [[ "${READY}" -ne 1 ]]; then
     exit 0
 fi
 
-log "running: pnpm paperclipai auth bootstrap-ceo (inside ${WEB_CONTAINER})"
+log "running: pnpm paperclipai auth bootstrap-ceo --base-url ${BASE_URL} (inside ${WEB_CONTAINER})"
 set +e
 out="$(docker exec -u node -w /app -e CI=1 -e HOME=/paperclip "${WEB_CONTAINER}" \
-    pnpm paperclipai auth bootstrap-ceo 2>&1)"
+    pnpm paperclipai auth bootstrap-ceo --base-url "${BASE_URL}" 2>&1)"
 rc=$?
 set -e
 printf '%s\n' "${out}" | tee -a "${LOG_FILE}" >&2
 if [[ "${rc}" -ne 0 ]]; then
-    log "bootstrap-ceo exited ${rc} (may be OK if admin already exists)"
+    log "bootstrap-ceo exited ${rc} (may be OK if an instance admin already exists)"
+fi
+
+# Strip common ANSI sequences so URL extraction works even if the CLI colors output.
+flat_out="$(printf '%s\n' "${out}" | sed 's/\x1b\[[0-9;]*m//g' || true)"
+[[ -z "${flat_out}" ]] && flat_out="${out}"
+invite_url="$(printf '%s\n' "${flat_out}" | grep -oE 'https?://[^[:space:]]+/invite/[^[:space:]]+' | head -1)"
+if [[ -n "${invite_url}" ]]; then
+    umask 022
+    tmp="${INVITE_FILE}.tmp.$$"
+    {
+        echo "Paperclip — first instance admin (CEO) invite"
+        echo ""
+        echo "Open this URL once in your browser to create the first admin account."
+        echo "(The in-app message cannot show this link; only the CLI can print it.)"
+        echo ""
+        echo "${invite_url}"
+        echo ""
+        echo "Saved at (Umbrel app data folder): PAPERCLIP_FIRST_ADMIN_INVITE.txt"
+        echo "Updated (UTC): $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+        echo ""
+        echo "If this link expires or you lose it before signing up: delete this file and"
+        echo "restart the app, or run in the container: pnpm paperclipai auth bootstrap-ceo"
+    } >"${tmp}"
+    mv "${tmp}" "${INVITE_FILE}"
+    chown 1000:1000 "${INVITE_FILE}" 2>/dev/null || true
+    chmod 644 "${INVITE_FILE}" 2>/dev/null || true
+    log "Wrote invite URL to PAPERCLIP_FIRST_ADMIN_INVITE.txt"
+else
+    log "No invite URL found in CLI output; see ${LOG_FILE} or run bootstrap-ceo manually."
 fi
 exit 0
