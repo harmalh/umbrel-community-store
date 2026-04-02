@@ -34,9 +34,11 @@ Follow [docs/UMBREL_DEVICE_TESTING.md](docs/UMBREL_DEVICE_TESTING.md). Record re
 
 ## Tested on umbrelOS
 
-| Date | umbrelOS version | Apps verified | Notes |
-|------|------------------|---------------|-------|
-| _TBD_ | _Run on device_ | _e.g. Paperclip install + open UI_ | _Agent could not reach umbrel.local; fill after local test._ |
+Fill this **right after** you complete device testing (see [docs/UMBREL_DEVICE_TESTING.md](docs/UMBREL_DEVICE_TESTING.md)). Include **hardware / environment** (e.g. Raspberry Pi, Umbrel Home, Linux VM) for traceability and future official submissions.
+
+| Date | Environment (hardware / VM) | umbrelOS version | Apps verified | Notes |
+|------|----------------------------|------------------|---------------|-------|
+| _TBD_ | _e.g. Raspberry Pi 4 / Umbrel Home_ | _from Settings or About_ | _Paperclip + stubs_ | _persistence / reinstall findings_ |
 
 ## Official Umbrel App Store
 
