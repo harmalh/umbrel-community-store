@@ -4,7 +4,7 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.9"
+version: "2026.325.10"
 port: 23100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
@@ -37,12 +37,11 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Fix bootstrap gateway startup on Umbrel updates.
+  Replace the bootstrap gateway with a tiny Node proxy inside the Paperclip image.
 
 
-  - nginx now resolves the Paperclip upstream at request time via Docker DNS
-    instead of failing at container startup.
-  - This prevents app_proxy from hanging at 99% while waiting for
+  - No extra nginx image pull during update/install.
+  - Avoids bootstrap container startup/DNS issues that left app_proxy waiting for
     `harmalh-paperclip_bootstrap_1`.
 
 

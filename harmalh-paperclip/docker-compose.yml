@@ -7,13 +7,13 @@ services:
       APP_PORT: 80
 
   bootstrap:
-    image: nginx:1.25-alpine
+    image: ghcr.io/harmalh/paperclip-umbrel:2026.325.0@sha256:1090a64d3c7b50301b4dd3b4b2b832252031fca145023b0cb11b4063c8dc2558
     restart: on-failure
     init: true
     depends_on: [web]
+    entrypoint: ["node", "/bootstrap/server.mjs"]
     volumes:
-      - ./bootstrap:/usr/share/nginx/html/bootstrap-entry:ro
-      - ./bootstrap/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./bootstrap:/bootstrap:ro
       - ${APP_DATA_DIR}:/app-data:ro
 
   web:
