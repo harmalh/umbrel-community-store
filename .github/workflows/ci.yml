@@ -77,14 +77,7 @@ jobs:
           sys.exit(1 if failed else 0)
           PY
 
-      - name: Docker Compose config (nginx stubs only)
-        env:
-          APP_DATA_DIR: /tmp/umbrel-ci
-          APP_SEED: ci-placeholder-not-for-production
+      - name: Docker Compose note (Umbrel merge)
         run: |
-          docker compose -f harmalh-hermes-agent/docker-compose.yml config
-          docker compose -f harmalh-opencode/docker-compose.yml config
-
-      - name: Paperclip compose note
-        run: |
-          echo "Skipping docker compose config for harmalh-paperclip: expects Umbrel app_proxy merge."
+          echo "Skipping 'docker compose config' for all apps: app_proxy has no image until Umbrel merges the stack."
+          echo "YAML structure for compose files is validated by the Parse docker-compose YAML step above."
