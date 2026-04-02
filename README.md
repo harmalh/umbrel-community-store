@@ -26,7 +26,7 @@ Copy packaging from those repos into this store when you cut a release (see [doc
 
 ## CI
 
-[`.github/workflows/ci.yml`](.github/workflows/ci.yml) validates `umbrel-app-store.yml`, every `*/umbrel-app.yml`, YAML parse of compose files, and runs `docker compose config` on the nginx stub apps.
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) validates `umbrel-app-store.yml`, every `*/umbrel-app.yml`, and YAML-parse of all `docker-compose.yml` files. Full `docker compose config` is skipped because `app_proxy` is injected by Umbrel.
 
 ## Device testing
 
