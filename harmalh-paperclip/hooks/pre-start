@@ -4,7 +4,6 @@ set -Eeuo pipefail
 # shellcheck source=/dev/null
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/paperclip-umbrel-env.sh"
 _HOST_PORT="$(paperclip_published_host_port)"
-_LAN_IP="$(paperclip_lan_ipv4)"
 
 mkdir -p "${APP_DATA_DIR}/data"
 chown -R 1000:1000 "${APP_DATA_DIR}/data" || true
@@ -45,7 +44,6 @@ if [[ ! -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
         --arg pub "$PUB" \
         --arg dh "$DH" \
         --arg dd "$DD" \
-        --arg lan "${_LAN_IP}" \
         '{
       "$meta": {"version": 1, "updatedAt": $updated, "source": "onboard"},
       "database": {
@@ -65,7 +63,7 @@ if [[ ! -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
         "exposure": "private",
         "host": "0.0.0.0",
         "port": 3100,
-        "allowedHostnames": ([$dd, $dh, $lan, "localhost", "127.0.0.1"] | map(select(length > 0)) | map(ascii_downcase) | unique),
+        "allowedHostnames": ([$dd, $dh, "localhost", "127.0.0.1"] | map(ascii_downcase) | unique),
         "serveUi": true
       },
       "auth": {
@@ -94,15 +92,11 @@ if [[ ! -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
     mv "${CONFIG_FILE}.tmp" "${CONFIG_FILE}"
     chown 1000:1000 "${CONFIG_FILE}" 2>/dev/null || true
 fi
-# Align saved config with the Umbrel-published port and LAN IP (Paperclip Host allowlist).
+# Align saved config with the Umbrel-published port.
 if [[ -f "${CONFIG_FILE}" ]] && command -v jq >/dev/null 2>&1; then
     _dd="${DEVICE_DOMAIN_NAME:-umbrel.local}"
     _want_pub="http://${_dd}:${_HOST_PORT}"
-    jq --arg w "${_want_pub}" --arg ip "${_LAN_IP}" \
-        '.auth.publicBaseUrl = $w
-        | .server.allowedHostnames = (
-            ((.server.allowedHostnames // []) + [$ip] | map(select(length > 0)) | map(ascii_downcase) | unique)
-          )' "${CONFIG_FILE}" >"${CONFIG_FILE}.ptmp" \
+    jq --arg w "${_want_pub}" '.auth.publicBaseUrl = $w' "${CONFIG_FILE}" >"${CONFIG_FILE}.ptmp" \
         && mv "${CONFIG_FILE}.ptmp" "${CONFIG_FILE}"
     chown 1000:1000 "${CONFIG_FILE}" 2>/dev/null || true
 fi

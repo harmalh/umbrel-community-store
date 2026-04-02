@@ -27,12 +27,6 @@ if ! command -v docker >/dev/null 2>&1; then
     exit 0
 fi
 
-if [[ -f "${INVITE_FILE}" ]] \
-    && grep -qE 'https?://[^[:space:]]+/invite/[^[:space:]]+' "${INVITE_FILE}" 2>/dev/null; then
-    log "Invite URL already saved in PAPERCLIP_FIRST_ADMIN_INVITE.txt — skipping bootstrap-ceo (avoids rotating a valid invite on every restart)."
-    exit 0
-fi
-
 {
     echo ""
     echo "=== paperclip-bootstrap $(date -u +"%Y-%m-%dT%H:%M:%SZ") ==="
@@ -67,6 +61,22 @@ if [[ "${READY}" -ne 1 ]]; then
     log "API /api/health never returned HTTP 200 (~3 min); skipping bootstrap-ceo."
     log "Paperclip is probably not running (often: embedded Postgres needs chmod 700 on"
     log "APP_DATA_DIR/data/instances/default/db). Check app logs and fix perms, then restart."
+    exit 0
+fi
+
+health_json="$(docker exec -u node -w /app "${WEB_CONTAINER}" node -e \
+    "require('http').get('http://127.0.0.1:3100/api/health',(r)=>{let b='';r.on('data',d=>b+=d);r.on('end',()=>{if(r.statusCode!==200)process.exit(1);process.stdout.write(b);});}).on('error',()=>process.exit(1));" \
+    2>/dev/null || true)"
+
+if printf '%s' "${health_json}" | grep -Eq '"bootstrapStatus"[[:space:]]*:[[:space:]]*"ready"'; then
+    log "Instance already has an admin user; skipping bootstrap-ceo."
+    exit 0
+fi
+
+if [[ -f "${INVITE_FILE}" ]] \
+    && grep -qE 'https?://[^[:space:]]+/invite/[^[:space:]]+' "${INVITE_FILE}" 2>/dev/null \
+    && printf '%s' "${health_json}" | grep -Eq '"bootstrapInviteActive"[[:space:]]*:[[:space:]]*true'; then
+    log "Active bootstrap invite already exists and is saved on disk; skipping bootstrap-ceo."
     exit 0
 fi
 

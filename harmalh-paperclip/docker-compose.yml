@@ -3,8 +3,18 @@ version: "3.7"
 services:
   app_proxy:
     environment:
-      APP_HOST: harmalh-paperclip_web_1
-      APP_PORT: 3100
+      APP_HOST: harmalh-paperclip_bootstrap_1
+      APP_PORT: 80
+
+  bootstrap:
+    image: nginx:1.25-alpine
+    restart: on-failure
+    init: true
+    depends_on: [web]
+    volumes:
+      - ./bootstrap:/usr/share/nginx/html/bootstrap-entry:ro
+      - ./bootstrap/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${APP_DATA_DIR}:/app-data:ro
 
   web:
     image: ghcr.io/harmalh/paperclip-umbrel:2026.325.0@sha256:1090a64d3c7b50301b4dd3b4b2b832252031fca145023b0cb11b4063c8dc2558
@@ -17,12 +27,12 @@ services:
       PORT: "3100"
       SERVE_UI: "true"
       PAPERCLIP_HOME: "/paperclip"
-      # Authenticated/private mode enforces a Host allowlist. Umbrel exposes the UI at
-      # Published port = umbrel-app.yml "port:" via exports.sh (23100; avoids official RTL on 3100).
+      # Authenticated/private mode enforces a Host allowlist. Umbrel opens a bootstrap
+      # entry route first, but the underlying Paperclip app still needs its canonical
+      # public URL for auth callbacks and invite URLs.
       # https://github.com/paperclipai/paperclip/blob/master/doc/DOCKER.md
       PAPERCLIP_PUBLIC_URL: "http://${DEVICE_DOMAIN_NAME}:${APP_PAPERCLIP_PUBLISHED_PORT:-23100}"
-      # Append LAN IP when set (exports.sh) so raw IP in the browser passes private hostname guard.
-      PAPERCLIP_ALLOWED_HOSTNAMES: "${DEVICE_DOMAIN_NAME},${DEVICE_HOSTNAME},localhost,127.0.0.1${APP_PAPERCLIP_LAN_IP:+,${APP_PAPERCLIP_LAN_IP}}"
+      PAPERCLIP_ALLOWED_HOSTNAMES: "${DEVICE_DOMAIN_NAME},${DEVICE_HOSTNAME},localhost,127.0.0.1"
       PAPERCLIP_DEPLOYMENT_MODE: "authenticated"
       PAPERCLIP_DEPLOYMENT_EXPOSURE: "private"
       BETTER_AUTH_SECRET: "$APP_SEED"

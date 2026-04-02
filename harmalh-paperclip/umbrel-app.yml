@@ -4,16 +4,15 @@ name: Paperclip
 tagline: Autonomous AI workspace for coding and operations
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/icon.svg
 category: ai
-version: "2026.325.7"
+version: "2026.325.8"
 port: 23100
 description: >-
   Umbrel package for Paperclip using the embedded PostgreSQL runtime inside the
   Paperclip container.
 
 
-  First-time admin: Paperclip cannot show the CEO invite URL in the browser (only a
-  hash is stored). After install or restart, open PAPERCLIP_FIRST_ADMIN_INVITE.txt
-  in this app's Umbrel data directory for the link, or see bootstrap-ceo-automation.log.
+  First-time admin: Umbrel opens a bootstrap entry route first and redirects to the
+  saved CEO invite when Paperclip is waiting for its first instance admin.
 
 
   This package intentionally uses a single-container topology:
@@ -23,9 +22,8 @@ description: >-
   All runtime state is persisted under APP_DATA_DIR via PAPERCLIP_HOME.
 
 
-  Web UI: open from the Umbrel home screen (published port 23100). If you see
-  ERR_CONNECTION_REFUSED, try http://<umbrel-lan-ip>:23100 (Windows mDNS can fail) or
-  check for a port conflict.
+  Invite automation still writes PAPERCLIP_FIRST_ADMIN_INVITE.txt and
+  bootstrap-ceo-automation.log under this app's Umbrel data directory.
 
 
   Packaging source: https://github.com/harmalh/umbrel-paperclip
@@ -39,15 +37,17 @@ gallery:
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/1.svg
   - https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip/assets/gallery/2.svg
 releaseNotes: >-
-  Fix HTTP 403 when using http://<LAN-IP>:23100 (Paperclip hostname allowlist).
+  Umbrel now opens a bootstrap landing route first and redirects to the saved CEO
+  invite while Paperclip is waiting for its first instance admin.
 
 
-  - APP_PAPERCLIP_LAN_IP from exports.sh appended to PAPERCLIP_ALLOWED_HOSTNAMES.
-  - pre-start merges LAN IP into config.json server.allowedHostnames.
+  - Add an Umbrel-owned nginx gateway at /bootstrap-entry/ and point the app tile there.
+  - Keep auto-running bootstrap-ceo and persisting PAPERCLIP_FIRST_ADMIN_INVITE.txt.
+  - Remove the earlier LAN-IP hostname workaround from packaging.
 
 
   Earlier: port 23100; invite file; Postgres perms; bootstrap hooks.
 dependencies: []
-path: ""
+path: "/bootstrap-entry/"
 defaultUsername: ""
 defaultPassword: ""
