@@ -10,7 +10,7 @@ Add this repository URL in **umbrelOS → App Store → Community app stores**.
 | Field | Value |
 |-------|--------|
 | Store `id` | `harmalh` (prefix for every app `id` and folder name) |
-| Apps | `harmalh-paperclip`, `harmalh-hermes-agent`, `harmalh-opencode` |
+| Apps | `harmalh-paperclip`, `harmalh-hermes-agent`, `harmalh-opencode`, `harmalh-worldmonitor` |
 
 Per [Umbrel’s community store template](https://github.com/getumbrel/umbrel-community-app-store), each app folder name **must** match its `umbrel-app.yml` `id`, and that id **must** start with the store id.
 
@@ -21,6 +21,7 @@ Per [Umbrel’s community store template](https://github.com/getumbrel/umbrel-co
 | `harmalh-paperclip/` | [harmalh/umbrel-paperclip](https://github.com/harmalh/umbrel-paperclip) |
 | `harmalh-hermes-agent/` | [harmalh/umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) |
 | `harmalh-opencode/` | [harmalh/umbrel-opencode](https://github.com/harmalh/umbrel-opencode) |
+| `harmalh-worldmonitor/` | [harmalh/umbrel-worldmonitor](https://github.com/harmalh/umbrel-worldmonitor) |
 
 Copy packaging from those repos into this store when you cut a release (see [docs/RELEASE_CHECKLIST.md](docs/RELEASE_CHECKLIST.md)). Longer term, automate sync to avoid drift.
 

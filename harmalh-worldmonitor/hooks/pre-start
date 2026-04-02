@@ -1,0 +1,7 @@
+#!/bin/bash
+set -Eeuo pipefail
+
+# Official redis:7-alpine runs as user redis (uid 999, gid 1000 on many builds).
+mkdir -p "${APP_DATA_DIR}/redis"
+chown -R 999:1000 "${APP_DATA_DIR}/redis" 2>/dev/null || true
+chmod 755 "${APP_DATA_DIR}/redis" || true

@@ -1,0 +1,68 @@
+version: "3.7"
+
+# Umbrel merges app_proxy. Main UI + API listen on 8080 inside the web container
+# (nginx + Node). Redis data persists under ${APP_DATA_DIR}/redis.
+#
+# Images must exist before install: run the manual GitHub Actions workflow in
+# harmalh/umbrel-worldmonitor with push_image enabled, then optionally pin digests
+# here (see packaging README).
+
+services:
+  app_proxy:
+    environment:
+      APP_HOST: harmalh-worldmonitor_web_1
+      APP_PORT: 8080
+
+  web:
+    image: ghcr.io/harmalh/worldmonitor-umbrel:v2.5.23
+    restart: on-failure
+    init: true
+    depends_on:
+      redis-rest:
+        condition: service_started
+      ais-relay:
+        condition: service_started
+    environment:
+      UPSTASH_REDIS_REST_URL: "http://redis-rest:80"
+      UPSTASH_REDIS_REST_TOKEN: "$APP_SEED"
+      LOCAL_API_PORT: "46123"
+      LOCAL_API_MODE: "docker"
+      LOCAL_API_CLOUD_FALLBACK: "false"
+      WS_RELAY_URL: "http://ais-relay:3004"
+      LLM_API_URL: "${LLM_API_URL:-}"
+      LLM_API_KEY: "${LLM_API_KEY:-}"
+      LLM_MODEL: "${LLM_MODEL:-}"
+      GROQ_API_KEY: "${GROQ_API_KEY:-}"
+      AISSTREAM_API_KEY: "${AISSTREAM_API_KEY:-}"
+      FINNHUB_API_KEY: "${FINNHUB_API_KEY:-}"
+      EIA_API_KEY: "${EIA_API_KEY:-}"
+      FRED_API_KEY: "${FRED_API_KEY:-}"
+      ACLED_ACCESS_TOKEN: "${ACLED_ACCESS_TOKEN:-}"
+      NASA_FIRMS_API_KEY: "${NASA_FIRMS_API_KEY:-}"
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN:-}"
+      AVIATIONSTACK_API: "${AVIATIONSTACK_API:-}"
+
+  ais-relay:
+    image: ghcr.io/harmalh/worldmonitor-umbrel-ais-relay:v2.5.23
+    restart: on-failure
+    init: true
+    environment:
+      AISSTREAM_API_KEY: "${AISSTREAM_API_KEY:-}"
+      PORT: "3004"
+
+  redis:
+    image: redis:7-alpine
+    restart: on-failure
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - ${APP_DATA_DIR}/redis:/data
+
+  redis-rest:
+    image: ghcr.io/harmalh/worldmonitor-umbrel-redis-rest:v2.5.23
+    restart: on-failure
+    init: true
+    depends_on:
+      - redis
+    environment:
+      SRH_TOKEN: "$APP_SEED"
+      SRH_CONNECTION_STRING: "redis://redis:6379"

@@ -1,6 +1,6 @@
 # Release checklist (store + packaging repos)
 
-## Per-app packaging repo (`umbrel-paperclip`, `umbrel-hermes-agent`, `umbrel-opencode`)
+## Per-app packaging repo (`umbrel-paperclip`, `umbrel-hermes-agent`, `umbrel-opencode`, `umbrel-worldmonitor`)
 
 1. Merge changes on `main`; confirm **CI** workflow is green.
 2. Build and push container images (manual or workflow); pin digests in `docker-compose.yml` when ready for production.
