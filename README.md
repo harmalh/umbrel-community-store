@@ -38,7 +38,7 @@ Fill this **right after** you complete device testing (see [docs/UMBREL_DEVICE_T
 
 | Date | Environment (hardware / VM) | umbrelOS version | Apps verified | Notes |
 |------|----------------------------|------------------|---------------|-------|
-| _TBD_ | _e.g. Raspberry Pi 4 / Umbrel Home_ | _from Settings or About_ | _Paperclip + stubs_ | _persistence / reinstall findings_ |
+| 2026-04-02 | Physical Umbrel on LAN (`umbrel.local`) | 1.5 | Store listing: Paperclip, Hermes Agent, OpenCode; **installed:** `harmalh-paperclip` | Install from **Harm Alhusen Lab** completed; Paperclip appears on dashboard; CPU/memory rose on launch. Restart / stop-start / uninstall-reinstall / persistence not exercised in this pass. Cursor integrated browser opened `http://umbrel.local:3100/` in extra tabs with an error shell—use the normal Umbrel “open app” flow in a desktop browser to confirm the Paperclip UI. |
 
 ## Official Umbrel App Store
 
