@@ -10,7 +10,7 @@ if [ ! -f "${APP_DATA_DIR}/www/index.html" ]; then
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Hermes Agent on Umbrel</title>
+  <title>Hermes Gateway on Umbrel</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 44rem; margin: 2rem; line-height: 1.5; color: #1a1a1a; }
     code { background: #f0f0f0; padding: 0.15rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
@@ -20,47 +20,56 @@ if [ ! -f "${APP_DATA_DIR}/www/index.html" ]; then
   </style>
 </head>
 <body>
-  <h1>Hermes Agent</h1>
+  <h1>Hermes Gateway</h1>
   <p>
-    The <strong>gateway</strong> (Telegram, Discord, Slack, WhatsApp, Signal, etc.) runs in the
-    <code>hermes</code> container. This page is the Umbrel App Store entry point so you have
-    setup instructions in the browser.
+    The Hermes runtime runs in the <code>hermes</code> container as a background
+    gateway service. This page is the Umbrel entry point for setup and diagnostics.
   </p>
+
+  <h2>Use The Right Hermes App</h2>
+  <ul>
+    <li><strong>Hermes Gateway</strong>: headless runtime and messaging integrations</li>
+    <li><strong>Hermes Workspace</strong>: full browser UI for chat, files, memory, skills, and terminal</li>
+    <li><strong>Paperclip Hermes</strong>: Paperclip orchestration with Hermes employees</li>
+  </ul>
 
   <h2>Documentation</h2>
   <ul>
-    <li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/docker/">Docker &amp; gateway</a></li>
+    <li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/docker/">Docker and gateway docs</a></li>
     <li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/configuration/">Configuration</a></li>
     <li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/">Messaging gateway</a></li>
   </ul>
 
-  <h2>First-time setup</h2>
+  <h2>First-Time Setup</h2>
   <p>
-    Hermes stores secrets and config under <code>APP_DATA_DIR/data</code> on your Umbrel
-    (mounted as <code>/opt/data</code> in the container): <code>.env</code>, <code>config.yaml</code>, etc.
+    Hermes stores config and secrets under <code>APP_DATA_DIR/data</code> on your
+    Umbrel host, mounted as <code>/opt/data</code> in the container.
   </p>
   <ul>
     <li>
-      <strong>Interactive wizard:</strong> Umbrel <strong>Settings → Advanced → Terminal</strong>, then run<br/>
-      <code>docker exec -it harmalh-hermes-agent_hermes_1 bash</code><br/>
-      and <code>hermes setup</code> (or follow the upstream quick start).
+      <strong>Interactive wizard:</strong> open Umbrel Terminal, run
+      <code>docker exec -it harmalh-hermes-agent_hermes_1 bash</code>,
+      then <code>hermes setup</code>.
     </li>
     <li>
-      <strong>Manual:</strong> Edit <code>.env</code> / <code>config.yaml</code> on the host inside this app&rsquo;s data folder
-      (SSH or file share), then restart the app from the Umbrel UI.
+      <strong>Manual:</strong> edit <code>.env</code> and <code>config.yaml</code>
+      in the app data folder, then restart the app.
     </li>
   </ul>
 
-  <h2>Logs &amp; health</h2>
+  <h2>Logs And Health</h2>
   <ul>
-    <li>Umbrel app <strong>⋮</strong> menu → logs for this app, or Terminal → <code>docker logs harmalh-hermes-agent_hermes_1</code></li>
-    <li>Upstream suggests <code>docker exec &lt;container&gt; hermes version</code> to verify the binary.</li>
+    <li>Umbrel app menu -> logs</li>
+    <li><code>docker logs harmalh-hermes-agent_hermes_1</code></li>
+    <li><code>docker exec harmalh-hermes-agent_hermes_1 hermes version</code></li>
   </ul>
 
   <h2>Packaging</h2>
   <p>
-    Community store: <a href="https://github.com/harmalh/umbrel-community-store">harmalh/umbrel-community-store</a><br/>
-    Source: <a href="https://github.com/harmalh/umbrel-hermes-agent">harmalh/umbrel-hermes-agent</a>
+    Community store:
+    <a href="https://github.com/harmalh/umbrel-community-store">harmalh/umbrel-community-store</a><br/>
+    Packaging source:
+    <a href="https://github.com/harmalh/umbrel-hermes-agent">harmalh/umbrel-hermes-agent</a>
   </p>
 </body>
 </html>
