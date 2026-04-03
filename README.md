@@ -41,6 +41,7 @@ Fill this **right after** you complete device testing (see [docs/UMBREL_DEVICE_T
 |------|----------------------------|------------------|---------------|-------|
 | 2026-04-02 | Physical Umbrel on LAN (`umbrel.local`) | 1.5 | Store listing: Paperclip, Hermes Agent, OpenCode; **installed:** `harmalh-paperclip` | Install from **Harm Alhusen Lab** completed; Paperclip appears on dashboard; CPU/memory rose on launch. Restart / stop-start / uninstall-reinstall / persistence not exercised in this pass. Cursor integrated browser opened `http://umbrel.local:3100/` in extra tabs with an error shell—use the normal Umbrel “open app” flow in a desktop browser to confirm the Paperclip UI. |
 | 2026-04-03 | — (packaging / CI on workstation) | — | **`harmalh-opencode`:** compose + store sync to v0.2.0; uses upstream `ghcr.io/anomalyco/opencode:beta` | Native Umbrel install not re-run in this pass. After you push to GitHub, refresh the community store on-device and follow [docs/UMBREL_DEVICE_TESTING.md](docs/UMBREL_DEVICE_TESTING.md) section 5 (OpenCode checklist). |
+| 2026-04-03 | — (GitHub Actions; digest-pinned images) | — | **`harmalh-worldmonitor`:** GHCR build succeeded (workflow 23928371735); compose uses `main@sha256` for web, ais-relay, redis-rest | Set each `ghcr.io/harmalh/worldmonitor-umbrel*` package to **Public** under GitHub → Packages if `docker pull` fails on Umbrel. Complete section 6 in [docs/UMBREL_DEVICE_TESTING.md](docs/UMBREL_DEVICE_TESTING.md) on hardware. |
 
 ## Official Umbrel App Store
 

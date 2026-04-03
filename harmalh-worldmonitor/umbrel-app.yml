@@ -4,7 +4,7 @@ name: World Monitor
 tagline: Real-time global intelligence dashboard — news, maps, and signals
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-worldmonitor/assets/icon.svg
 category: networks
-version: "2.5.23"
+version: "2026.4.3.1"
 port: 23150
 description: >-
   Umbrel package for World Monitor (upstream koala73/worldmonitor): AI-assisted
@@ -17,9 +17,9 @@ description: >-
   via your environment or future exports; features degrade gracefully without them.
 
 
-  Before installing from the community store, build and push the three GHCR images
-  using the manual workflow in harmalh/umbrel-worldmonitor (see packaging README),
-  or pin this compose file to your own registry.
+  GHCR images are digest-pinned; rebuild via harmalh/umbrel-worldmonitor Actions
+  if you need a newer upstream main. Ensure packages at ghcr.io/harmalh are
+  **public** (or your Umbrel host can pull them).
 
 
   Packaging source: https://github.com/harmalh/umbrel-worldmonitor
@@ -31,9 +31,9 @@ repo: https://github.com/koala73/worldmonitor
 support: https://github.com/koala73/worldmonitor/issues
 gallery: []
 releaseNotes: >-
-  Initial Umbrel packaging: multi-container compose (web, ais-relay, redis,
-  redis-rest), GHCR image workflow from upstream ref v2.5.23, pre-start hook for
-  Redis data permissions.
+  Pin multi-arch manifest digests for web, ais-relay, redis-rest (packaging
+  workflow run 23928371735). Upstream ref main. CI: npm retry patch, relay
+  build tools for native deps, smoke GET / on web image.
 dependencies: []
 path: ""
 defaultUsername: ""

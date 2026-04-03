@@ -14,20 +14,23 @@ The [community store template](https://github.com/getumbrel/umbrel-community-app
 2. Open **Community app stores** (wording may vary slightly by version) and choose **Add**.
 3. Paste: `https://github.com/harmalh/umbrel-community-store`
 4. Confirm the store appears (this repo’s store name: **Harm Alhusen Lab**).
-5. Open the store listing and **verify all apps** show up with sensible **names, icons, and descriptions**:
+5. Open the store listing and **verify every app** shows up with sensible **names, icons, and descriptions**:
    - `harmalh-paperclip` — Paperclip
    - `harmalh-hermes-agent` — Hermes Agent (gateway + status page; requires GHCR image — see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent))
-   - `harmalh-opencode` — OpenCode (nginx setup page + `ghcr.io/anomalyco/opencode`; see [umbrel-opencode README](https://github.com/harmalh/umbrel-opencode))
+   - `harmalh-opencode` — OpenCode (stub)
+   - `harmalh-worldmonitor` — World Monitor (multi-container; GHCR images must be **public** or pullable — see [umbrel-worldmonitor README](https://github.com/harmalh/umbrel-worldmonitor))
 
 If something is wrong in the listing, fix `umbrel-app.yml` (and assets URLs) in this repo, push, and refresh the store on Umbrel.
 
 ---
 
-## 2. Install Paperclip first
+## 2. Full apps: Paperclip and World Monitor
 
-Paperclip is the primary **full web UI** app. **Hermes Agent** is a real stack (nginx status page + `hermes gateway run`) but the container image must exist on GHCR (`ghcr.io/harmalh/hermes-agent-umbrel`) — run the packaging workflow in [harmalh/umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) before expecting install to succeed. **OpenCode** pulls the upstream **`ghcr.io/anomalyco/opencode`** image (beta tag); install requires your Umbrel to reach GHCR. Interactive use is via **Terminal** / `docker exec`, not the browser.
+**Paperclip** is a primary **full web UI** app. **World Monitor** is also a full multi-container app (web + AIS relay + Redis + redis-rest); ensure [harmalh/umbrel-worldmonitor](https://github.com/harmalh/umbrel-worldmonitor) Actions have pushed digest-pinned images and GHCR packages are **public** before installing.
 
-**Goal for this step is “good enough,” not perfection:**
+**Hermes Agent** is a real stack (nginx status page + `hermes gateway run`) but the container image must exist on GHCR (`ghcr.io/harmalh/hermes-agent-umbrel`) — run the packaging workflow in [harmalh/umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) before expecting install to succeed. OpenCode remains a minimal nginx stub until replaced.
+
+**Goal for each full app is “good enough,” not perfection:**
 
 - [ ] Install succeeds
 - [ ] App opens from the Umbrel dashboard
@@ -36,20 +39,24 @@ Paperclip is the primary **full web UI** app. **Hermes Agent** is a real stack (
 - [ ] **Restart** the app (or host) works
 - [ ] No obvious packaging failure (compose, proxy, env)
 
+For **World Monitor** specifically, confirm **four** containers are up after install (`web`, `ais-relay`, `redis`, `redis-rest`) and the UI loads; if the UI is blank, check logs for Redis or relay errors.
+
 Umbrel’s model assumes users use the **web UI**, not SSH—so a working UI path matters most here.
 
 ---
 
-## 3. Test restart and persistence (do this right after Paperclip works)
+## 3. Test restart and persistence (repeat per full app)
 
 Official packaging guidance stresses **volumes** and **what survives** stop/start vs uninstall.
 
-After Paperclip is running:
+After **Paperclip** is running:
 
 - [ ] Create or change some **state you care about** (e.g. sign in, create a workspace, or any in-app setting).
 - [ ] **Restart** the app from Umbrel; confirm expected state is still there.
 - [ ] **Stop** then **start** the app; confirm again.
 - [ ] **Uninstall** then **reinstall**; confirm behavior matches expectations (usually **data gone** unless you documented otherwise).
+
+Repeat the same pattern for **World Monitor** after it is installed (e.g. UI preferences or cached data you care about). World Monitor persists Redis under `${APP_DATA_DIR}/redis` for the stack’s cache layer.
 
 Anything **not** on a persisted volume is discarded on container recreation; even volume data is typically removed on **uninstall**—so this test is one of the most valuable real-device checks.
 
@@ -57,13 +64,13 @@ Anything **not** on a persisted volume is discarded on container recreation; eve
 
 ## 4. Fill the “Tested on umbrelOS” table in the store README
 
-As soon as Paperclip (and optionally the stubs) are verified, update the table in [README.md](../README.md).
+As soon as **Paperclip**, **World Monitor**, and (optionally) **Hermes** / **OpenCode** are verified to the level you need, update the table in [README.md](../README.md).
 
 For eventual **official** submissions, Umbrel expects you to describe the **environment you tested on** (e.g. Raspberry Pi, Umbrel Home, x86 VM). Recording that now improves traceability even for a community store.
 
 ---
 
-## 5. Hermes Agent (gateway) and OpenCode
+## 5. Hermes Agent (gateway) and OpenCode (stub)
 
 **Hermes Agent**
 
@@ -73,12 +80,21 @@ For eventual **official** submissions, Umbrel expects you to describe the **envi
 - [ ] **`hermes` container** stays up (`docker logs harmalh-hermes-agent_hermes_1`); configure gateway via `docker exec` or `.env` under `APP_DATA_DIR/data`
 - [ ] **Restart** preserves data under `data/`; **uninstall** clears app data as usual
 
-**OpenCode**
+**OpenCode** (still a minimal nginx stub)
 
-- [ ] **Install** from the store succeeds (pulls `ghcr.io/anomalyco/opencode:beta`)
-- [ ] App **opens** from Umbrel (setup page in browser)
-- [ ] **`opencode` container** stays up (`docker logs harmalh-opencode_opencode_1`); smoke: `docker exec -it harmalh-opencode_opencode_1 opencode --help` (or `which opencode` if `--help` is unsupported)
-- [ ] **Restart** preserves files under `data/` (including `data/workspace/`); **uninstall** clears app data as usual
+- [ ] Install opens a **landing page** with packaging pointers
+
+Defer full OpenCode product packaging until you swap in a real image.
+
+---
+
+## 6. World Monitor (multi-container)
+
+- [ ] GHCR packages **worldmonitor-umbrel**, **worldmonitor-umbrel-ais-relay**, **worldmonitor-umbrel-redis-rest** are **public** (or your node can pull them)
+- [ ] **Install** from the community store succeeds
+- [ ] App **opens** from Umbrel; static UI and API routes behave (watch for proxy / `Origin` issues — see upstream nginx)
+- [ ] **Restart** app: Redis volume under `redis/` retains data as expected for the stack
+- [ ] **Uninstall** / **reinstall**: confirm expected data reset
 
 ---
 
