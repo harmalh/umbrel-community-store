@@ -16,7 +16,7 @@ The [community store template](https://github.com/getumbrel/umbrel-community-app
 4. Confirm the store appears (this repo’s store name: **Harm Alhusen Lab**).
 5. Open the store listing and **verify every app** shows up with sensible **names, icons, and descriptions**:
    - `harmalh-paperclip` — Paperclip
-   - `harmalh-hermes-agent` — Hermes Agent (gateway + status page; requires GHCR image — see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent))
+   - `harmalh-hermes-agent` — Hermes Agent (gateway + status page; GHCR `ghcr.io/harmalh/hermes-agent-umbrel` digest-pinned — see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent))
    - `harmalh-opencode` — OpenCode (stub)
    - `harmalh-worldmonitor` — World Monitor (multi-container; GHCR images must be **public** or pullable — see [umbrel-worldmonitor README](https://github.com/harmalh/umbrel-worldmonitor))
 
@@ -28,7 +28,7 @@ If something is wrong in the listing, fix `umbrel-app.yml` (and assets URLs) in 
 
 **Paperclip** is a primary **full web UI** app. **World Monitor** is also a full multi-container app (web + AIS relay + Redis + redis-rest); ensure [harmalh/umbrel-worldmonitor](https://github.com/harmalh/umbrel-worldmonitor) Actions have pushed digest-pinned images and GHCR packages are **public** before installing.
 
-**Hermes Agent** is a real stack (nginx status page + `hermes gateway run`) but the container image must exist on GHCR (`ghcr.io/harmalh/hermes-agent-umbrel`) — run the packaging workflow in [harmalh/umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) before expecting install to succeed. OpenCode remains a minimal nginx stub until replaced.
+**Hermes Agent** uses `ghcr.io/harmalh/hermes-agent-umbrel` (multi-arch, digest-pinned in compose; rebuild via [umbrel-hermes-agent Actions](https://github.com/harmalh/umbrel-hermes-agent/actions) when you bump upstream). OpenCode remains a minimal nginx stub until replaced.
 
 **Goal for each full app is “good enough,” not perfection:**
 
@@ -74,7 +74,7 @@ For eventual **official** submissions, Umbrel expects you to describe the **envi
 
 **Hermes Agent**
 
-- [ ] GHCR image built and tagged (e.g. `0.2.0`) per [umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) README; digest pinned in store `docker-compose.yml` when you cut a stable release
+- [ ] GHCR image pulls (`0.2.0@sha256:a7ee8728416b9e368b108f645978f4426b6556d64dc20c6a0a7427a21ba8e1ea` per store `docker-compose.yml`); rebuild via Actions when changing upstream
 - [ ] Native **install** works from the store
 - [ ] App **opens** from Umbrel (status/setup page)
 - [ ] **`hermes` container** stays up (`docker logs harmalh-hermes-agent_hermes_1`); configure gateway via `docker exec` or `.env` under `APP_DATA_DIR/data`
