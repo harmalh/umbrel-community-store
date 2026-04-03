@@ -74,6 +74,7 @@ For eventual **official** submissions, Umbrel expects you to describe the **envi
 
 **Hermes Agent**
 
+- [ ] **`hermes-agent-umbrel` on GHCR is [public](https://github.com/harmalh?tab=packages)** — Umbrel pulls without `docker login`; a **private** package causes install to abort immediately (see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent#ghcr-package-must-be-public-umbrel-install))
 - [ ] GHCR image pulls (`0.2.0@sha256:a7ee8728416b9e368b108f645978f4426b6556d64dc20c6a0a7427a21ba8e1ea` per store `docker-compose.yml`); rebuild via Actions when changing upstream
 - [ ] Native **install** works from the store
 - [ ] App **opens** from Umbrel (status/setup page)
