@@ -16,8 +16,8 @@ The [community store template](https://github.com/getumbrel/umbrel-community-app
 4. Confirm the store appears (this repo’s store name: **Harm Alhusen Lab**).
 5. Open the store listing and **verify every app** shows up with sensible **names, icons, and descriptions**:
    - `harmalh-paperclip` — Paperclip
-   - `harmalh-hermes-agent` — Hermes Agent (gateway + status page; GHCR `ghcr.io/harmalh/hermes-agent-umbrel` digest-pinned — see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent))
-   - `harmalh-opencode` — OpenCode (stub)
+- `harmalh-hermes-agent` — Hermes Agent (gateway + status page; published port `23110`; GHCR `ghcr.io/harmalh/hermes-agent-umbrel` digest-pinned — see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent))
+- `harmalh-opencode` — OpenCode (setup page + terminal workflow; published port `23120`)
    - `harmalh-worldmonitor` — World Monitor (multi-container; GHCR images must be **public** or pullable — see [umbrel-worldmonitor README](https://github.com/harmalh/umbrel-worldmonitor))
 
 If something is wrong in the listing, fix `umbrel-app.yml` (and assets URLs) in this repo, push, and refresh the store on Umbrel.
@@ -75,6 +75,7 @@ For eventual **official** submissions, Umbrel expects you to describe the **envi
 **Hermes Agent**
 
 - [ ] **`hermes-agent-umbrel` on GHCR is [public](https://github.com/harmalh?tab=packages)** — Umbrel pulls without `docker login`; a **private** package causes install to abort immediately (see [umbrel-hermes-agent README](https://github.com/harmalh/umbrel-hermes-agent#ghcr-package-must-be-public-umbrel-install))
+- [ ] Store manifest publishes **`23110`**, not `80`; if you still see `failed to bind host port for 0.0.0.0:80`, refresh the community store to the latest Hermes release before retrying
 - [ ] GHCR image pulls (`0.2.0@sha256:a7ee8728416b9e368b108f645978f4426b6556d64dc20c6a0a7427a21ba8e1ea` per store `docker-compose.yml`); rebuild via Actions when changing upstream
 - [ ] Native **install** works from the store
 - [ ] App **opens** from Umbrel (status/setup page)
@@ -83,7 +84,10 @@ For eventual **official** submissions, Umbrel expects you to describe the **envi
 
 **OpenCode** (still a minimal nginx stub)
 
+- [ ] Store manifest publishes **`23120`**, not `80`; if install still aborts with `address already in use` on port `80`, refresh the community store before retrying
 - [ ] Install opens a **landing page** with packaging pointers
+- [ ] `ghcr.io/anomalyco/opencode:beta@sha256:778c74ca292f97f86df5abb4c2b9894aca5da8e11422fba67dd21be59d94958d` pulls successfully
+- [ ] `docker exec -it harmalh-opencode_opencode_1 sh -c 'cd /data/workspace && opencode'` works after install
 
 Defer full OpenCode product packaging until you swap in a real image.
 

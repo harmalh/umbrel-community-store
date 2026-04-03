@@ -4,8 +4,8 @@ name: Hermes Agent
 tagline: Self-improving AI agent with messaging gateway (Nous Research)
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-hermes-agent/assets/icon.svg
 category: ai
-version: "0.2.2"
-port: 80
+version: "0.2.3"
+port: 23110
 description: >-
   Hermes Agent runs a persistent messaging gateway (Telegram, Discord, Slack,
   WhatsApp, Signal, and more) from a Docker container with data under APP_DATA_DIR.
@@ -32,7 +32,9 @@ repo: https://github.com/NousResearch/hermes-agent
 support: https://github.com/NousResearch/hermes-agent/issues
 gallery: []
 releaseNotes: >-
-  shm_size 1g; reminder: hermes-agent-umbrel GHCR package must be public for Umbrel install.
+  Publish on port 23110 instead of 80 so Umbrel app_proxy does not collide with
+  host services. Reminder: hermes-agent-umbrel on GHCR must be public for
+  anonymous pulls during install.
 dependencies: []
 path: ""
 defaultUsername: ""
