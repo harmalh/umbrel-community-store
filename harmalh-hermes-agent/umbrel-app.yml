@@ -4,7 +4,7 @@ name: Hermes Gateway
 tagline: Headless Hermes runtime and messaging gateway
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-hermes-agent/assets/icon.svg
 category: ai
-version: "0.2.4"
+version: "0.2.5"
 port: 23110
 description: >-
   Hermes Gateway runs the Hermes messaging and automation runtime as a
@@ -21,7 +21,8 @@ description: >-
   browser UI.
 
 
-  Packaging source: https://github.com/harmalh/umbrel-hermes-agent
+  The image is a multi-arch build published to GHCR and pinned in compose for
+  reproducible installs.
 developer: Nous Research
 website: https://github.com/NousResearch/hermes-agent
 submitter: Harm Alhusen
@@ -30,11 +31,13 @@ repo: https://github.com/NousResearch/hermes-agent
 support: https://github.com/NousResearch/hermes-agent/issues
 gallery: []
 releaseNotes: >-
-  Rebrand the package as Hermes Gateway so its role is clear in the Umbrel store.
+  Rebuild Hermes Gateway against the newer stable `NousResearch/hermes-agent`
+  release `v2026.4.8` and refresh the digest-pinned GHCR image.
 
-
-  The runtime topology, app id, and data paths are unchanged.
+  This keeps the Umbrel package topology unchanged while pulling in upstream
+  runtime fixes from the latest tagged Hermes release.
 dependencies: []
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+

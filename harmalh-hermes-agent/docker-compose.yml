@@ -13,9 +13,9 @@ services:
     volumes:
       - ${APP_DATA_DIR}/www:/usr/share/nginx/html:ro
 
-  # Multi-arch index digest from harmalh/umbrel-hermes-agent Actions run 23928504678.
+  # Multi-arch index digest from workflow run 23928504678 (main @ 2026-04-03).
   hermes:
-    image: ghcr.io/harmalh/hermes-agent-umbrel:0.2.0@sha256:a7ee8728416b9e368b108f645978f4426b6556d64dc20c6a0a7427a21ba8e1ea
+    image: ghcr.io/harmalh/hermes-agent-umbrel:0.2.5@sha256:19096da242a600669f5f4a54d7e2d23fa710657d531b361065ba28b09c476acc
     restart: on-failure
     init: true
     stop_grace_period: 1m
