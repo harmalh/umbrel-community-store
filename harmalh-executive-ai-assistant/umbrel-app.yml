@@ -4,7 +4,7 @@ name: Executive AI Assistant
 tagline: AI Gmail assistant with optional automatic polling
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-executive-ai-assistant/assets/icon.svg
 category: ai
-version: "0.1.0"
+version: "0.1.1"
 port: 23224
 path: ""
 description: >-
@@ -29,8 +29,14 @@ dependencies: []
 repo: https://github.com/langchain-ai/executive-ai-assistant
 support: https://github.com/langchain-ai/executive-ai-assistant/issues
 gallery: []
-releaseNotes: ""
+releaseNotes: >-
+  Automated private release from harmalh/Umbrel-LangChain-AI-assistant.
+
+  Upstream EAIA repo: langchain-ai/executive-ai-assistant
+  Upstream EAIA ref: main
+  Image: ghcr.io/harmalh/umbrel-langchain-ai-assistant:0.1.1@sha256:390795433d9d7cb404a864bdf93b5d2547dded5a44bd49ea542f1f47849fb651
 defaultUsername: ""
 defaultPassword: ""
 submitter: Harm Alhusen
 submission: https://github.com/harmalh/umbrel-community-store
+

@@ -7,7 +7,7 @@ services:
       APP_PORT: 3000
 
   ui:
-    image: ghcr.io/harmalh/umbrel-langchain-ai-assistant:0.1.0
+    image: ghcr.io/harmalh/umbrel-langchain-ai-assistant:0.1.1@sha256:390795433d9d7cb404a864bdf93b5d2547dded5a44bd49ea542f1f47849fb651
     restart: on-failure
     stop_grace_period: 1m
     init: true
