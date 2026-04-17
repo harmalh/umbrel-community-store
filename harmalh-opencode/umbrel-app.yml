@@ -2,7 +2,7 @@ manifestVersion: 1.1
 id: harmalh-opencode
 name: OpenCode
 tagline: AI coding agent — setup in browser, run via Umbrel Terminal
-icon: https://raw.githubusercontent.com/harmalh/umbrel-opencode/main/assets/icon.svg
+icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-opencode/assets/icon.svg
 category: developer
 version: "0.2.1"
 port: 23120
@@ -22,9 +22,6 @@ description: >-
 
 
   **Upstream:** https://opencode.ai/docs/ · Image: ghcr.io/anomalyco/opencode
-
-
-  Packaging source: https://github.com/harmalh/umbrel-opencode
 developer: Harm Alhusen
 website: https://github.com/harmalh/umbrel-opencode
 submitter: Harm Alhusen
@@ -40,3 +37,4 @@ dependencies: []
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+
