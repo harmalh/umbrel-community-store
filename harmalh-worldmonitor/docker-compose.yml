@@ -2,8 +2,10 @@ version: "3.7"
 
 # Umbrel merges app_proxy. Main UI + API listen on 8080 inside the web container
 # (nginx + Node). Redis data persists under ${APP_DATA_DIR}/redis.
-# Images: ghcr.io/harmalh/worldmonitor-umbrel* (digest-pinned; rebuild via
-# harmalh/umbrel-worldmonitor Actions).
+#
+# Images must exist before install: run the manual GitHub Actions workflow in this
+# repo (Build World Monitor Images) with push_image enabled, then optionally pin
+# digests here (see README).
 
 services:
   app_proxy:
@@ -12,7 +14,7 @@ services:
       APP_PORT: 8080
 
   web:
-    image: ghcr.io/harmalh/worldmonitor-umbrel:main@sha256:7f2ba7a74fb35cae1bbecb4da0c9ac5268f507fbe458122aa19a1c843dc10d5c
+    image: ghcr.io/harmalh/worldmonitor-umbrel:main@sha256:1d1e843cd1637990776624327003cee4fd6cbae8f7de87ad9abcc3326e96a8de
     restart: on-failure
     init: true
     depends_on:
@@ -41,7 +43,7 @@ services:
       AVIATIONSTACK_API: "${AVIATIONSTACK_API:-}"
 
   ais-relay:
-    image: ghcr.io/harmalh/worldmonitor-umbrel-ais-relay:main@sha256:68566bf3bedc006897db1dfa528edb1ca1baf75ac5d36fe570ae3405b5bb121d
+    image: ghcr.io/harmalh/worldmonitor-umbrel-ais-relay:main@sha256:6b5658472cb8af06b7ade8402d14802dba755df1bfca9439e4e0deb3a1132a2b
     restart: on-failure
     init: true
     environment:
@@ -56,7 +58,7 @@ services:
       - ${APP_DATA_DIR}/redis:/data
 
   redis-rest:
-    image: ghcr.io/harmalh/worldmonitor-umbrel-redis-rest:main@sha256:0791277dc62d6075ed6e90240a8ef796937b0351e90023d62d8b2bbf1d81bd46
+    image: ghcr.io/harmalh/worldmonitor-umbrel-redis-rest:main@sha256:5a06e997fb3774f005bab0d737a9974f5cf709cf1cf24fcec8331ca5c7a94728
     restart: on-failure
     init: true
     depends_on:

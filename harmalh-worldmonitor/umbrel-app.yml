@@ -17,9 +17,10 @@ description: >-
   via your environment or future exports; features degrade gracefully without them.
 
 
-  GHCR images are digest-pinned; rebuild via harmalh/umbrel-worldmonitor Actions
-  if you need a newer upstream main. Ensure packages at ghcr.io/harmalh are
-  **public** (or your Umbrel host can pull them).
+  GHCR images are digest-pinned in compose; rebuild via this repo’s Actions to
+  refresh from upstream main. If pulls fail, set each ghcr.io/harmalh
+  worldmonitor-umbrel* package to **public** under GitHub → Packages (fine-grained
+  PATs cannot change visibility via API).
 
 
   Packaging source: https://github.com/harmalh/umbrel-worldmonitor
@@ -31,10 +32,10 @@ repo: https://github.com/koala73/worldmonitor
 support: https://github.com/koala73/worldmonitor/issues
 gallery: []
 releaseNotes: >-
-  Pin multi-arch manifest digests for web, ais-relay, redis-rest (packaging
-  workflow run 23928371735). Upstream ref main. CI: npm retry patch, relay
-  build tools for native deps, smoke GET / on web image.
+  Pin multi-arch manifest digests for web, ais-relay, redis-rest (workflow run 24554401368). Upstream ref main.
+
 dependencies: []
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+
