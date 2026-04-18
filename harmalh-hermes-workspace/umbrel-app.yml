@@ -4,7 +4,7 @@ name: Hermes Workspace
 tagline: Full Hermes browser workspace for chat, files, memory, and terminal
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-hermes-workspace/assets/icon.svg
 category: ai
-version: "0.1.2"
+version: "0.1.3"
 port: 23130
 description: >-
   Hermes Workspace is the full Hermes browser UI for chat, files, terminal,
@@ -19,7 +19,7 @@ description: >-
   APP_DATA_DIR/hermes.
 
 
-  Packaging source: https://github.com/harmalh/umbrel-hermes-workspace
+  Build and publish both GHCR images before installing from the community store.
 developer: outsourc-e
 website: https://github.com/outsourc-e/hermes-workspace
 submitter: Harm Alhusen
@@ -28,12 +28,14 @@ repo: https://github.com/outsourc-e/hermes-workspace
 support: https://github.com/outsourc-e/hermes-workspace/issues
 gallery: []
 releaseNotes: >-
-  Fixed the Hermes Workspace pre-start hook permissions so Umbrel actually
-  runs the backend state-directory bootstrap.
+  Automated private release from harmalh/umbrel-hermes-workspace.
 
-  Without this, the mounted Hermes data directory could stay root-owned and
-  prevent the bundled backend from starting.
+  Workspace ref: 379f3b102a2296a60ae720b5aeeeae3990e60256
+  Hermes Agent ref: fe38075e974aba9d13b22b71e7e351284fcb333b
+  UI image: ghcr.io/harmalh/hermes-workspace-ui-umbrel:0.1.3@sha256:c256942f50c2ca259b6e45b1ed39edc143a7a39fb14c4be6afe54c14ebc6f04f
+  API image: ghcr.io/harmalh/hermes-workspace-api-umbrel:0.1.3@sha256:52fcae1ab8fd2605eb33decf42192e339bbe6bd6587875366b9854788a501554
 dependencies: []
 path: ""
 defaultUsername: ""
 defaultPassword: ""
+
