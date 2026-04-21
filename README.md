@@ -15,8 +15,8 @@ Store URL:
 | Field | Value |
 |-------|-------|
 | Store id | `harmalh` |
-| Apps | `harmalh-paperclip`, `harmalh-paperclip-hermes`, `harmalh-hermes-agent`, `harmalh-hermes-workspace`, `harmalh-opencode`, `harmalh-worldmonitor` |
-| Published ports | `harmalh-paperclip` -> `23100`, `harmalh-paperclip-hermes` -> `23140`, `harmalh-hermes-agent` -> `23110`, `harmalh-hermes-workspace` -> `23130`, `harmalh-opencode` -> `23120`, `harmalh-worldmonitor` -> `23150` |
+| Apps | `harmalh-paperclip-hermes`, `harmalh-hermes-agent`, `harmalh-hermes-workspace`, `harmalh-opencode`, `harmalh-worldmonitor` |
+| Published ports | `harmalh-paperclip-hermes` -> `23140`, `harmalh-hermes-agent` -> `23110`, `harmalh-hermes-workspace` -> `23130`, `harmalh-opencode` -> `23120`, `harmalh-worldmonitor` -> `23150` |
 
 Per Umbrel community store rules, each app folder name must match its
 `umbrel-app.yml` `id`, and each `id` must start with the store id.
@@ -25,7 +25,6 @@ Per Umbrel community store rules, each app folder name must match its
 
 - `harmalh-hermes-agent`: `ghcr.io/harmalh/hermes-agent-umbrel` must be public or otherwise anonymously pullable by the Umbrel host.
 - `harmalh-hermes-workspace`: `ghcr.io/harmalh/hermes-workspace-ui-umbrel` and `ghcr.io/harmalh/hermes-workspace-api-umbrel` must be public or otherwise anonymously pullable by the Umbrel host.
-- `harmalh-paperclip`: `ghcr.io/harmalh/paperclip-umbrel` must be public or otherwise anonymously pullable by the Umbrel host.
 - `harmalh-paperclip-hermes`: `ghcr.io/harmalh/paperclip-hermes-umbrel` must be public or otherwise anonymously pullable by the Umbrel host.
 - `harmalh-opencode`: the app publishes on `23120` instead of `80` to avoid host port collisions.
 - `harmalh-worldmonitor`: `ghcr.io/harmalh/worldmonitor-umbrel`, `worldmonitor-umbrel-ais-relay`, and `worldmonitor-umbrel-redis-rest` must be public or otherwise anonymously pullable by the Umbrel host.
@@ -34,7 +33,6 @@ Per Umbrel community store rules, each app folder name must match its
 
 | App folder | Packaging + CI + image builds |
 |------------|-------------------------------|
-| `harmalh-paperclip/` | [harmalh/umbrel-paperclip](https://github.com/harmalh/umbrel-paperclip) |
 | `harmalh-paperclip-hermes/` | [harmalh/umbrel-paperclip-hermes](https://github.com/harmalh/umbrel-paperclip-hermes) |
 | `harmalh-hermes-agent/` | [harmalh/umbrel-hermes-agent](https://github.com/harmalh/umbrel-hermes-agent) |
 | `harmalh-hermes-workspace/` | [harmalh/umbrel-hermes-workspace](https://github.com/harmalh/umbrel-hermes-workspace) |
@@ -59,7 +57,7 @@ below after testing.
 
 | Date | Environment | umbrelOS version | Apps verified | Notes |
 |------|-------------|------------------|---------------|-------|
-| 2026-04-02 | Physical Umbrel on LAN (`umbrel.local`) | 1.5 | Store listing: Paperclip, Hermes Gateway, OpenCode; installed: `harmalh-paperclip` | Install from the community store completed; Paperclip appeared on the dashboard. Restart, reinstall, and persistence were not exercised in that pass. |
+| 2026-04-02 | Physical Umbrel on LAN (`umbrel.local`) | 1.5 | Store listing: Hermes Gateway, OpenCode | Community store listing verified on-device. Restart, reinstall, and persistence were not exercised in that pass. |
 | 2026-04-03 | Workstation packaging and CI | - | `harmalh-opencode` synced to v0.2.1 and `harmalh-worldmonitor` synced to digest-pinned GHCR images | Native Umbrel installs were not re-run in that pass. Refresh the community store on-device and follow the device-testing checklist before relying on those builds. |
 
 ## Official Umbrel App Store
