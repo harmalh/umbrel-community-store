@@ -7,7 +7,7 @@ services:
       APP_PORT: 80
 
   bootstrap:
-    image: ghcr.io/harmalh/paperclip-hermes-umbrel:2026.403.0-hermes.4@sha256:09bfbdbce14f16f65509065033a4447de46ed663013a81293ca603840d52f6dd
+    image: ghcr.io/harmalh/paperclip-hermes-umbrel:2026.403.0-hermes.4@sha256:41e1e88f16dbb3cac3967082ff2c09bc33c28bcd54f60a2b86fecaf81ce6fd3a
     restart: on-failure
     init: true
     depends_on: [web]
@@ -17,7 +17,7 @@ services:
       - ${APP_DATA_DIR}:/app-data:ro
 
   web:
-    image: ghcr.io/harmalh/paperclip-hermes-umbrel:2026.403.0-hermes.4@sha256:09bfbdbce14f16f65509065033a4447de46ed663013a81293ca603840d52f6dd
+    image: ghcr.io/harmalh/paperclip-hermes-umbrel:2026.403.0-hermes.4@sha256:41e1e88f16dbb3cac3967082ff2c09bc33c28bcd54f60a2b86fecaf81ce6fd3a
     restart: on-failure
     stop_grace_period: 1m
     init: true
