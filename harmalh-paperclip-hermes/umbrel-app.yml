@@ -4,7 +4,7 @@ name: Paperclip Hermes
 tagline: Paperclip orchestration with Hermes employees
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-paperclip-hermes/assets/icon.svg
 category: ai
-version: "2026.403.0-hermes.4"
+version: "2026.416.0-hermes.23"
 port: 23140
 description: >-
   Paperclip Hermes packages Paperclip as an Umbrel app with the Hermes CLI
