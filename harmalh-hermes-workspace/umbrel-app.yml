@@ -15,6 +15,10 @@ description: >-
   of a Hermes API service built from outsourc-e/hermes-agent.
 
 
+  Bundled upstreams: Hermes Workspace commit 379f3b1 and Hermes Agent commit
+  fe38075.
+
+
   The UI stays stateless while Hermes runtime data is persisted under
   APP_DATA_DIR/hermes.
 
@@ -38,4 +42,3 @@ dependencies: []
 path: ""
 defaultUsername: ""
 defaultPassword: ""
-
