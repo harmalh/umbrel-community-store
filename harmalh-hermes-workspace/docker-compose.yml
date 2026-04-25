@@ -7,7 +7,7 @@ services:
       APP_PORT: 3000
 
   workspace:
-    image: ghcr.io/harmalh/hermes-workspace-ui-umbrel:0.1.4@sha256:3cb92a27b8cb932ebaa9a65d42b561e3969f3913e26f4d7a89f5a7d58a6e4925
+    image: ghcr.io/harmalh/hermes-workspace-ui-umbrel:0.1.5@sha256:467ea5ee8fdee96b7760f8715c91332098475076ad4b04a0ba92c396afd0ed83
     restart: on-failure
     init: true
     depends_on: [hermes-api]
@@ -16,7 +16,7 @@ services:
       HERMES_API_URL: "http://hermes-api:8642"
 
   hermes-api:
-    image: ghcr.io/harmalh/hermes-workspace-api-umbrel:0.1.4@sha256:afdf50c7c9b5b9f9f8372841d4aa652c7434ecab0026270df8ba9725767667b2
+    image: ghcr.io/harmalh/hermes-workspace-api-umbrel:0.1.5@sha256:9483e94d7d3c7ea49e103e269ab62ac42a3e0f2ecb14eefd3149b7bdcb263fa1
     restart: on-failure
     init: true
     stop_grace_period: 1m
