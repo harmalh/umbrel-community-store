@@ -4,7 +4,7 @@ name: Hermes Workspace
 tagline: Full Hermes browser workspace for chat, files, memory, and terminal
 icon: https://raw.githubusercontent.com/harmalh/umbrel-community-store/main/harmalh-hermes-workspace/assets/icon.svg
 category: ai
-version: "0.1.5"
+version: "0.1.6"
 port: 23130
 description: >-
   Hermes Workspace is the full Hermes browser UI for chat, files, terminal,
